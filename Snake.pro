@@ -24,10 +24,16 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    snake.cpp \
+    food.cpp \
+    drawer.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    snake.h \
+    food.h \
+    drawer.h
 
 FORMS += \
         mainwindow.ui

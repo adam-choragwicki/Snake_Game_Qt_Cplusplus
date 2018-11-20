@@ -12,6 +12,21 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->setBackgroundBrush(QBrush(Qt::black)); //background is black
     scene->setSceneRect(0,0,1560,810);
 
+    drawArena();
+
+    snake = new Snake;
+    drawer = new Drawer(scene);
+    updaterTimer = new QTimer;
+
+    drawer->drawSnake(snake->getPositions());
+    //drawAllSquares();
+
+    connect(updaterTimer, SIGNAL(timeout()), this, SLOT(updater()));
+    updaterTimer->start(100);
+}
+
+void MainWindow::drawAllSquares()
+{
     QPen red_pen(Qt::red);
     QBrush red_brush(Qt::red);
 
@@ -21,39 +36,92 @@ MainWindow::MainWindow(QWidget *parent) :
     QPen blue_pen(Qt::blue);
     QBrush blue_brush(Qt::blue);
 
-    int square_count=0;
-    int square_size = 29;
+    for(int i=0 ; i<50; i++)
+    {
+        for(int j=0; j<25; j++)
+        {
+            if(i%2 ==0)  //even
+            {
+                //shift 30 right and down
+                scene->addRect(30 + i*30, 30 + j*30, square_size,square_size, red_pen, green_brush);
+            }
+            else //odd
+            {
+                //shift 30 right and down
+                scene->addRect(30 + i*30, 30 + j*30, square_size,square_size, blue_pen, green_brush);
+            }
+        }
+    }
+}
 
-//    for(int i=0 ; i<52; i++)
-//    {
-//        for(int j=0; j<27; j++)
-//        {
-//            if(i==51 && j == 26)
-//            {
-//                scene->addRect(i*30,j*30,30,30, red_pen, blue_brush);
-//                continue;
-//            }
-//            if(i%2 ==0)  //even
-//            {
-//                scene->addRect(i*30,j*30,square_size,square_size, red_pen, green_brush);
-//            }
-//            else //odd
-//            {
-//                scene->addRect(i*30,j*30,square_size,square_size, blue_pen, green_brush);
-//            }
+void MainWindow::drawArena()
+{
+     scene->addLine(15,15,1560-15,15, QPen(Qt::white,30));
+     scene->addLine(15,15,15,810-15, QPen(Qt::white,30));
+     scene->addLine(1560-15,15,1560-15,810-15, QPen(Qt::white,30));
+     scene->addLine(15,810-15,1560-15,810-15, QPen(Qt::white,30));
+}
 
-//            square_count++;
-//        }
-//    }
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    int currentDirection = snake->getDirection();
 
-    scene->addLine(15,15,1560-15,15, QPen(Qt::white,30));
-    scene->addLine(15,15,15,810-15, QPen(Qt::white,30));
+    switch(event->key())
+    {
+    case Qt::Key_A:
+        if(currentDirection != Snake::right)
+            snake->setNextDirection(Snake::left);
+        qDebug() << "LEFT";
+        break;
+    case Qt::Key_W:
+        if(currentDirection != Snake::down)
+        snake->setNextDirection(Snake::up);
+        qDebug() << "UP";
+        break;
+    case Qt::Key_S:
+        if(currentDirection != Snake::up)
+        snake->setNextDirection(Snake::down);
+        qDebug() << "DOWN";
+        break;
+    case Qt::Key_D:
+        if(currentDirection != Snake::left)
+        snake->setNextDirection(Snake::right);
+        qDebug() << "RIGHT";
+        break;
+    default:
+        qDebug() << "Wrong key pressed";
+    }
+}
 
-    scene->addLine(1560-15,15,1560-15,810-15, QPen(Qt::white,30));
-    scene->addLine(15,810-15,1560-15,810-15, QPen(Qt::white,30));
+void MainWindow::updater()
+{
+    snake->move(snake->getDirection());
 
-    qDebug() << "Liczba kwadratow: " << square_count;
+    //if snake hit wall
+    if(snake->getHeadPosition().x() > 49 ||
+            snake->getHeadPosition().x() < 0 ||
+            snake->getHeadPosition().y() > 24 ||
+            snake->getHeadPosition().y() < 0)
+    {
+        updaterTimer->stop();
+    }
 
+    //if snake hit itself
+    QVector<QPoint> snakePositions = snake->getPositions();
+    snakePositions.removeFirst();
+    QPoint headPosition = snake->getHeadPosition();
+
+    if(snakePositions.contains(headPosition))
+    {
+        updaterTimer->stop();
+        return;
+    }
+
+    snake->setDirection(snake->getNextDirection());
+
+    //redraw snake
+    drawer->eraseSnake();
+    drawer->drawSnake(snake->getPositions());
 }
 
 MainWindow::~MainWindow()
