@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QTimer>
 #include <QKeyEvent>
+#include <QMessageBox>
 
 #include <snake.h>
 #include <drawer.h>
@@ -24,8 +25,8 @@ public:
     ~MainWindow();
 
     void drawAllSquares();
-    
     void drawArena();
+    void restartGame();
 
 private:
     Ui::MainWindow *ui;

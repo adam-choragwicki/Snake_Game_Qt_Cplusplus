@@ -2,16 +2,14 @@
 
 Snake::Snake()
 {
+    initialize();
+}
+
+void Snake::initialize()
+{
     positions.append(QPoint(25,12));
     positions.append(QPoint(24,12));
     positions.append(QPoint(23,12));
-    positions.append(QPoint(22,12));
-    positions.append(QPoint(21,12));
-    positions.append(QPoint(20,12));
-    positions.append(QPoint(19,12));
-    positions.append(QPoint(18,12));
-    positions.append(QPoint(17,12));
-    positions.append(QPoint(16,12));
 
     headPosition.setX(positions.front().x()); //initial head position x
     headPosition.setY(positions.front().y()); //initial head position y
@@ -72,6 +70,13 @@ void Snake::grow()
     default:
         qDebug() << "Wrong direction in Snake::grow(int direction)";
     }
+}
+
+//used to restart game
+void Snake::clearPositions()
+{
+    positions.clear();
+    positions.squeeze();
 }
 
 void Snake::setHeadPosition(QPoint headPoint)

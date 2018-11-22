@@ -19,10 +19,12 @@ private:
 
 public:
     Snake();
-
+    void initialize();
     void move();
     bool isMovePossible();
     void grow();
+
+    void clearPositions();
 
     void setHeadPosition(QPoint headPoint);
     void setDirection(int dir);

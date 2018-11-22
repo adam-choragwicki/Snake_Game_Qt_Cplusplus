@@ -65,6 +65,14 @@ void MainWindow::drawArena()
      scene->addLine(15,810-15,1560-15,810-15, QPen(Qt::white,30));
 }
 
+void MainWindow::restartGame()
+{
+    snake->clearPositions();
+    snake->initialize();
+
+    updaterTimer->start(100);
+}
+
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     int currentDirection = snake->getDirection();
@@ -99,6 +107,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 void MainWindow::updater()
 {
     snake->move();
+    snake->setDirection(snake->getNextDirection());
 
     //if snake hit wall
     if(snake->getHeadPosition().x() > 49 ||
@@ -107,6 +116,17 @@ void MainWindow::updater()
             snake->getHeadPosition().y() < 0)
     {
         updaterTimer->stop();
+        int answer = QMessageBox::question(this, "Game Over", "Restart?", QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::Cancel);
+
+        if(answer == QMessageBox::Ok)
+        {
+            restartGame();
+        }
+        else
+        {
+            exit(0);
+        }
+        return;
     }
 
     //if snake hit itself
@@ -117,10 +137,18 @@ void MainWindow::updater()
     if(snakePositions.contains(headPosition))
     {
         updaterTimer->stop();
+        int answer = QMessageBox::question(this, "Game Over", "Restart?", QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::Cancel);
+
+        if(answer == QMessageBox::Ok)
+        {
+            restartGame();
+        }
+        else
+        {
+            exit(0);
+        }
         return;
     }
-
-    snake->setDirection(snake->getNextDirection());
 
     //if snake head hits food point
     if(snake->getHeadPosition() == food->getPosition())
