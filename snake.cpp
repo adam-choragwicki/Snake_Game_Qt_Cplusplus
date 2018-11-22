@@ -20,7 +20,7 @@ Snake::Snake()
     setNextDirection(right);
 }
 
-void Snake::move(int direction)
+void Snake::move()
 {
     switch(direction)
     {
@@ -46,6 +46,31 @@ void Snake::move(int direction)
         break;
     default:
         qDebug() << "Wrong direction in Snake::move(int direction)";
+    }
+}
+
+void Snake::grow()
+{
+    switch(direction)
+    {
+    case left:
+        positions.prepend(QPoint(headPosition.x() - 1, headPosition.y()));
+        setHeadPosition(QPoint(positions.front()));
+        break;
+    case up:
+        positions.prepend(QPoint(headPosition.x(), headPosition.y() - 1));
+        setHeadPosition(QPoint(positions.front()));
+        break;
+    case down:
+        positions.prepend(QPoint(headPosition.x(), headPosition.y() + 1));
+        setHeadPosition(QPoint(positions.front()));
+        break;
+    case right:
+        positions.prepend(QPoint(headPosition.x() + 1, headPosition.y()));
+        setHeadPosition(QPoint(positions.front()));
+        break;
+    default:
+        qDebug() << "Wrong direction in Snake::grow(int direction)";
     }
 }
 

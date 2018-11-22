@@ -13,10 +13,13 @@ public:
     Drawer(QGraphicsScene *mainScene);
     void drawSnake(QVector<QPoint> positions);
     void eraseSnake();
+    void drawFood(QPoint foodPos);
+    void eraseFood();
 
 private:
     QGraphicsScene *scene;
     QVector<QGraphicsRectItem*> drawnItems;
+    QGraphicsRectItem *drawnFood;
 
     int square_size = 29;
 };

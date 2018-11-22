@@ -37,9 +37,21 @@ void Drawer::eraseSnake()
     for(auto item : drawnItems)
     {
         scene->removeItem(item);
-        //drawnItems.removeOne(item);
-
     }
+
     drawnItems.clear();
     drawnItems.squeeze();
+}
+
+void Drawer::drawFood(QPoint foodPos)
+{
+    QPen red_pen(Qt::red);
+    QBrush red_brush(Qt::red);
+
+    drawnFood = scene->addRect(30 + foodPos.x()*30, 30 + foodPos.y()*30,square_size,square_size, red_pen, red_brush);
+}
+
+void Drawer::eraseFood()
+{
+    scene->removeItem(drawnFood);
 }

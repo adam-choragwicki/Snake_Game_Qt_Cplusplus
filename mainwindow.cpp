@@ -15,11 +15,14 @@ MainWindow::MainWindow(QWidget *parent) :
     drawArena();
 
     snake = new Snake;
+    food = new Food;
     drawer = new Drawer(scene);
     updaterTimer = new QTimer;
 
+    food->generateAndPlace();
+
     drawer->drawSnake(snake->getPositions());
-    //drawAllSquares();
+    drawer->drawFood(food->getPosition());
 
     connect(updaterTimer, SIGNAL(timeout()), this, SLOT(updater()));
     updaterTimer->start(100);
@@ -95,7 +98,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::updater()
 {
-    snake->move(snake->getDirection());
+    snake->move();
 
     //if snake hit wall
     if(snake->getHeadPosition().x() > 49 ||
@@ -118,6 +121,15 @@ void MainWindow::updater()
     }
 
     snake->setDirection(snake->getNextDirection());
+
+    //if snake head hits food point
+    if(snake->getHeadPosition() == food->getPosition())
+    {
+        drawer->eraseFood();
+        snake->grow();
+        food->generateAndPlace();
+        drawer->drawFood(food->getPosition());
+    }
 
     //redraw snake
     drawer->eraseSnake();

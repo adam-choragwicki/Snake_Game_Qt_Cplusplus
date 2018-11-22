@@ -9,6 +9,7 @@
 
 #include <snake.h>
 #include <drawer.h>
+#include <food.h>
 
 namespace Ui {
 class MainWindow;
@@ -33,6 +34,7 @@ private:
     QTimer *updaterTimer;
     Drawer *drawer;
     Snake *snake;
+    Food *food;
 
     int square_size = 29;
 

@@ -20,7 +20,7 @@ private:
 public:
     Snake();
 
-    void move(int direction);
+    void move();
     bool isMovePossible();
     void grow();
 
