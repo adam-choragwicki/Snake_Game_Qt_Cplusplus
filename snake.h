@@ -21,18 +21,14 @@ public:
 
     QVector<QPoint>& GetPositions() {return m_Positions;}
     QPoint& GetHeadPosition() {return m_HeadPosition;}
-    QPoint& GetTailPosition() {return m_TailPosition;}
     Direction& GetDirection() {return m_Direction;}
     Direction& GetNextDirection() {return m_NextDirection;}
 
 private:
-    int m_Size;
     Direction m_Direction;
     Direction m_NextDirection;
     QPoint m_HeadPosition;
-    QPoint m_TailPosition;
     QVector<QPoint> m_Positions;
-    bool m_IsGrowing;
 
     QVector<QPoint> m_StartingPositions = {QPoint(25,12), QPoint(24,12), QPoint(23,12)};
 };

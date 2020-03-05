@@ -12,7 +12,7 @@ public:
 
     void GenerateAndPlace();
     void SetPosition(QPoint position){m_Position = position;}
-    QPoint GetPosition() {return m_Position;}
+    QPoint& GetPosition() {return m_Position;}
 
 private:
     QRandomGenerator m_RandomGenerator;

@@ -34,8 +34,12 @@ private:
     void DrawAllSquares();
     void DrawGameArena();
     void RestartGame();
+    void CheckSnakeCollisionWithWall();
+    void CheckSnakeCollisionWithFoodSquare();
+    void CheckSnakeCollisionWithItself();
+    void RedrawSnake();
 
-    void keyPressEvent(QKeyEvent *event) override;
+        void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
     void GameTick();
