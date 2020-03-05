@@ -3,17 +3,6 @@
 #include "utilities.h"
 #include <drawer.h>
 
-void GameWindow::InitializeGameplayScene()
-{
-    m_pUi->graphicsView->setScene(&m_Scene);
-    m_Scene.setBackgroundBrush(QBrush(Qt::black));
-
-    int const sceneWidth = COLUMNS_COUNT * SQUARE_SIZE + 2 * WALL_THICKNESS;
-    int const sceneHeight = ROWS_COUNT * SQUARE_SIZE + 2 * WALL_THICKNESS;
-
-    m_Scene.setSceneRect(0,0, sceneWidth, sceneHeight);
-}
-
 GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::MainWindow)
 {
     m_pUi->setupUi(this);
@@ -29,13 +18,23 @@ GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::Mai
 
     m_Food.GenerateAndPlace();
 
-    Drawer::DrawSnake(m_Snake.GetPositions());
-    Drawer::DrawFood(m_Food.GetPosition());
+    Drawer::DrawSnake(m_Snake.GetPositions(), m_Snake.GetSnakeSquaresGraphicalRectItems());
 
     connect(&m_UpdaterTimer, &QTimer::timeout, this, &GameWindow::GameTick);
     m_UpdaterTimer.start(GAME_TICK);
 
     //DrawAllSquares();
+}
+
+void GameWindow::InitializeGameplayScene()
+{
+    m_pUi->graphicsView->setScene(&m_Scene);
+    m_Scene.setBackgroundBrush(QBrush(Qt::black));
+
+    int const sceneWidth = COLUMNS_COUNT * SQUARE_SIZE + 2 * WALL_THICKNESS;
+    int const sceneHeight = ROWS_COUNT * SQUARE_SIZE + 2 * WALL_THICKNESS;
+
+    m_Scene.setSceneRect(0,0, sceneWidth, sceneHeight);
 }
 
 void GameWindow::DrawAllSquares()
@@ -178,10 +177,9 @@ void GameWindow::CheckSnakeCollisionWithFoodSquare()
 {
     if(m_Snake.GetHeadPosition() == m_Food.GetPosition())
     {
-        Drawer::EraseFood();
-        m_Snake.Grow();
+        Drawer::EraseFood(m_Food.GetFoodSquareGraphicalRectItem());
         m_Food.GenerateAndPlace();
-        Drawer::DrawFood(m_Food.GetPosition());
+        m_Snake.Grow();
     }
 }
 
@@ -244,8 +242,8 @@ void GameWindow::CheckSnakeCollisionWithItself()
 
 void GameWindow::RedrawSnake()
 {
-    Drawer::EraseSnake();
-    Drawer::DrawSnake(m_Snake.GetPositions());
+    Drawer::EraseSnake(m_Snake.GetSnakeSquaresGraphicalRectItems());
+    Drawer::DrawSnake(m_Snake.GetPositions(), m_Snake.GetSnakeSquaresGraphicalRectItems());
 }
 
 void GameWindow::GameTick()

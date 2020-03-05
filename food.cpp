@@ -1,21 +1,21 @@
 #include "food.h"
 #include "utilities.h"
+#include "drawer.h"
 
 Food::Food()
 {
-    
+    m_pFoodSquareGraphicalRectItem = nullptr;
 }
 
 void Food::GenerateAndPlace()
 {
-    int positionX, positionY;
+    m_pFoodSquareGraphicalRectItem = nullptr;
 
-    positionX = m_RandomGenerator.bounded(MINIMUM_ROW_COLUMN, MAXIMUM_COLUMN);
-    positionY = m_RandomGenerator.bounded(MINIMUM_ROW_COLUMN, MAXIMUM_ROW);
-
-    qDebug() << "Food position X: " << positionX;
-    qDebug() << "Food position Y: " << positionY;
+    int positionX = m_RandomGenerator.bounded(MINIMUM_ROW_COLUMN, MAXIMUM_COLUMN);
+    int positionY = m_RandomGenerator.bounded(MINIMUM_ROW_COLUMN, MAXIMUM_ROW);
 
     m_Position.setX(positionX);
     m_Position.setY(positionY);
+
+    m_pFoodSquareGraphicalRectItem = Drawer::DrawFood(m_Position);
 }

@@ -1,51 +1,52 @@
 #include "drawer.h"
 #include "utilities.h"
+#include <QDebug>
 
 QGraphicsScene* Drawer::m_pScene = nullptr;
-QVector<QGraphicsRectItem*> Drawer::m_SnakeSquaresGraphicalRectItems;
-QGraphicsRectItem* Drawer::m_pFoodSquareGraphicalRectItem = nullptr;
 
-void Drawer::DrawSnake(QVector<QPoint> const& snakeSquarePositions)
+void Drawer::DrawSnake(QVector<QPoint> const& snakeSquarePositions, QVector<QGraphicsRectItem*>& snakeSquaresGraphicalRectItems)
 {
     QPen redPen(Qt::red);
     QBrush greenBrush(Qt::green);
 
     for(auto snakeSquarePosition : snakeSquarePositions)
     {
-        m_SnakeSquaresGraphicalRectItems.append(m_pScene->addRect(snakeSquarePosition.x() * SQUARE_SIZE  + SQUARE_SIZE,
-                                                                  snakeSquarePosition.y() * SQUARE_SIZE  + SQUARE_SIZE,
-                                                                  SQUARE_SIZE,
-                                                                  SQUARE_SIZE,
-                                                                  redPen,
-                                                                  greenBrush));
+        snakeSquaresGraphicalRectItems.append(m_pScene->addRect(snakeSquarePosition.x() * SQUARE_SIZE  + SQUARE_SIZE,
+                                                                snakeSquarePosition.y() * SQUARE_SIZE  + SQUARE_SIZE,
+                                                                SQUARE_SIZE,
+                                                                SQUARE_SIZE,
+                                                                redPen,
+                                                                greenBrush));
     }
 }
 
-void Drawer::EraseSnake()
+void Drawer::EraseSnake(QVector<QGraphicsRectItem*>& snakeSquaresGraphicalRectItems)
 {
-    for(auto item : m_SnakeSquaresGraphicalRectItems)
+    for(auto item : snakeSquaresGraphicalRectItems)
     {
         m_pScene->removeItem(item);
     }
 
-    m_SnakeSquaresGraphicalRectItems.clear();
-    m_SnakeSquaresGraphicalRectItems.squeeze();
+    snakeSquaresGraphicalRectItems.clear();
+    snakeSquaresGraphicalRectItems.squeeze();
 }
 
-void Drawer::DrawFood(QPoint foodPosition)
+QGraphicsRectItem* Drawer::DrawFood(QPoint foodPosition)
 {
     QPen redPen(Qt::red);
     QBrush redBrush(Qt::red);
 
-    m_pFoodSquareGraphicalRectItem = m_pScene->addRect(foodPosition.x() * SQUARE_SIZE + SQUARE_SIZE,
-                                                       foodPosition.y() * SQUARE_SIZE + SQUARE_SIZE,
-                                                       SQUARE_SIZE,
-                                                       SQUARE_SIZE,
-                                                       redPen,
-                                                       redBrush);
+    QGraphicsRectItem* pFoodSquareGraphicalRectItem = m_pScene->addRect(foodPosition.x() * SQUARE_SIZE + SQUARE_SIZE,
+                                                     foodPosition.y() * SQUARE_SIZE + SQUARE_SIZE,
+                                                     SQUARE_SIZE,
+                                                     SQUARE_SIZE,
+                                                     redPen,
+                                                     redBrush);
+
+    return pFoodSquareGraphicalRectItem;
 }
 
-void Drawer::EraseFood()
+void Drawer::EraseFood(QGraphicsRectItem* pFoodSquareGraphicalRectItem)
 {
-    m_pScene->removeItem(m_pFoodSquareGraphicalRectItem);
+    m_pScene->removeItem(pFoodSquareGraphicalRectItem);
 }
