@@ -22,8 +22,6 @@ GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::Mai
 
     connect(&m_UpdaterTimer, &QTimer::timeout, this, &GameWindow::GameTick);
     m_UpdaterTimer.start(GAME_TICK);
-
-    //DrawAllSquares();
 }
 
 void GameWindow::InitializeGameplayScene()
@@ -194,7 +192,7 @@ void GameWindow::CheckSnakeCollisionWithWall()
         m_UpdaterTimer.stop();
 
         int answer = QMessageBox::question(this,
-                                           "Game Over",
+                                           "Snake has hit the wall",
                                            "Restart?",
                                            QMessageBox::StandardButton::Ok,
                                            QMessageBox::StandardButton::Cancel);
@@ -224,7 +222,7 @@ void GameWindow::CheckSnakeCollisionWithItself()
     {
         m_UpdaterTimer.stop();
         int answer = QMessageBox::question(this,
-                                           "Game Over",
+                                           "Snake has hit itself",
                                            "Restart?",
                                            QMessageBox::StandardButton::Ok,
                                            QMessageBox::StandardButton::Cancel);

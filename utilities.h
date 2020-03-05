@@ -4,17 +4,18 @@ int const SQUARE_SIZE = 30;
 int const ROWS_COUNT = 25;
 int const COLUMNS_COUNT = 50;
 
+/*Do not modify beyond this point*/
+int const WALL_THICKNESS = SQUARE_SIZE;
 int const MINIMUM_ROW_COLUMN = 0;
-int const MAXIMUM_ROW = 24;
-int const MAXIMUM_COLUMN = 49;
+int const MAXIMUM_ROW = ROWS_COUNT - 1;
+int const MAXIMUM_COLUMN = COLUMNS_COUNT - 1;
 
-int const LEFT_BORDER_X = 15;
-int const RIGHT_BORDER_X = 1560;
-int const RIGHT_BORDER_X_OFFSET = -15;
-int const TOP_Y = 15;
-int const BOTTOM_Y = 810;
-int const BOTTOM_Y_OFFSET = -15;
-int const WALL_THICKNESS = 30;
+int const LEFT_BORDER_X = SQUARE_SIZE/2;
+int const RIGHT_BORDER_X = COLUMNS_COUNT * SQUARE_SIZE + 2 * WALL_THICKNESS;
+int const RIGHT_BORDER_X_OFFSET = -SQUARE_SIZE/2;
+int const TOP_Y = SQUARE_SIZE/2;
+int const BOTTOM_Y = ROWS_COUNT * SQUARE_SIZE + 2 * WALL_THICKNESS;
+int const BOTTOM_Y_OFFSET = -SQUARE_SIZE/2;
 
 int const GAME_TICK = 100;
 

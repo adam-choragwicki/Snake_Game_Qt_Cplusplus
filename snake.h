@@ -33,7 +33,9 @@ private:
     Direction m_NextDirection;
     QPoint m_HeadPosition;
     QVector<QPoint> m_Positions;
-    QVector<QPoint> m_StartingPositions = {QPoint(25,12), QPoint(24,12), QPoint(23,12)};
+    QVector<QPoint> m_StartingPositions = {QPoint(COLUMNS_COUNT/2 + 2, ROWS_COUNT/2),
+                                           QPoint(COLUMNS_COUNT/2 + 1, ROWS_COUNT/2),
+                                           QPoint(COLUMNS_COUNT/2, ROWS_COUNT/2)};
 
     QVector<QGraphicsRectItem*> m_SnakeSquaresGraphicalRectItems;
 };
