@@ -1,38 +1,39 @@
 #include "game_window.h"
 #include "ui_game_window.h"
 #include "utilities.h"
+#include <drawer.h>
 
-GameWindow::GameWindow(QWidget *parent) :
-    QMainWindow(parent),
-    m_pUi(new Ui::MainWindow)
+void GameWindow::InitializeGameplayScene()
 {
-    m_pUi->setupUi(this);
-    setFocus(Qt::ActiveWindowFocusReason);
-    this->setWindowTitle("Snake");
-
-    m_pScene = new QGraphicsScene(this);
-    m_pUi->graphicsView->setScene(m_pScene);
-    m_pScene->setBackgroundBrush(QBrush(Qt::black)); //background is black
+    m_pUi->graphicsView->setScene(&m_Scene);
+    m_Scene.setBackgroundBrush(QBrush(Qt::black));
 
     int const sceneWidth = 1560;
     int const sceneHeight = 810;
 
-    m_pScene->setSceneRect(0,0,sceneWidth,sceneHeight);
+    m_Scene.setSceneRect(0,0, sceneWidth, sceneHeight);
+}
+
+GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::MainWindow)
+{
+    m_pUi->setupUi(this);
+
+    setFocus(Qt::ActiveWindowFocusReason);
+    this->setWindowTitle("Snake");
+
+    InitializeGameplayScene();
 
     DrawGameArena();
 
-    m_pSnake = new Snake;
-    m_pFood = new Food;
-    m_pDrawer = new Drawer(m_pScene);
-    m_pUpdaterTimer = new QTimer;
+    Drawer::SetScene(&m_Scene);
 
-    m_pFood->GenerateAndPlace();
+    m_Food.GenerateAndPlace();
 
-    m_pDrawer->DrawSnake(m_pSnake->GetPositions());
-    m_pDrawer->DrawFood(m_pFood->GetPosition());
+    Drawer::DrawSnake(m_Snake.GetPositions());
+    Drawer::DrawFood(m_Food.GetPosition());
 
-    connect(m_pUpdaterTimer, &QTimer::timeout, this, &GameWindow::GameTick);
-    m_pUpdaterTimer->start(GAME_TICK);
+    connect(&m_UpdaterTimer, &QTimer::timeout, this, &GameWindow::GameTick);
+    m_UpdaterTimer.start(GAME_TICK);
 
     //DrawAllSquares();
 }
@@ -51,7 +52,7 @@ void GameWindow::DrawAllSquares()
             {
                 if(row % 2 == 0)
                 {
-                    m_pScene->addRect(column * SQUARE_SIZE + SQUARE_SIZE,
+                    m_Scene.addRect(column * SQUARE_SIZE + SQUARE_SIZE,
                                       row * SQUARE_SIZE + SQUARE_SIZE,
                                       SQUARE_SIZE,
                                       SQUARE_SIZE,
@@ -60,7 +61,7 @@ void GameWindow::DrawAllSquares()
                 }
                 else
                 {
-                    m_pScene->addRect(column * SQUARE_SIZE + SQUARE_SIZE,
+                    m_Scene.addRect(column * SQUARE_SIZE + SQUARE_SIZE,
                                       row * SQUARE_SIZE + SQUARE_SIZE,
                                       SQUARE_SIZE,
                                       SQUARE_SIZE,
@@ -73,7 +74,7 @@ void GameWindow::DrawAllSquares()
             {
                 if(row % 2 == 0)
                 {
-                    m_pScene->addRect(column * SQUARE_SIZE + SQUARE_SIZE,
+                    m_Scene.addRect(column * SQUARE_SIZE + SQUARE_SIZE,
                                       row * SQUARE_SIZE + SQUARE_SIZE,
                                       SQUARE_SIZE,
                                       SQUARE_SIZE,
@@ -82,7 +83,7 @@ void GameWindow::DrawAllSquares()
                 }
                 else
                 {
-                    m_pScene->addRect(column * SQUARE_SIZE + SQUARE_SIZE,
+                    m_Scene.addRect(column * SQUARE_SIZE + SQUARE_SIZE,
                                       row * SQUARE_SIZE + SQUARE_SIZE,
                                       SQUARE_SIZE,
                                       SQUARE_SIZE,
@@ -99,25 +100,25 @@ void GameWindow::DrawGameArena()
     QPen pen(Qt::white, SQUARE_SIZE);
 
     /*Top wall*/
-    m_pScene->addLine(LEFT_BORDER_X,
+    m_Scene.addLine(LEFT_BORDER_X,
                       TOP_Y,
                       RIGHT_BORDER_X + RIGHT_BORDER_X_OFFSET,
                       TOP_Y,
                       pen);
     /*Left wall*/
-    m_pScene->addLine(LEFT_BORDER_X,
+    m_Scene.addLine(LEFT_BORDER_X,
                       TOP_Y,
                       LEFT_BORDER_X,
                       BOTTOM_Y + BOTTOM_Y_OFFSET,
                       pen);
     /*Bottom wall*/
-    m_pScene->addLine(LEFT_BORDER_X,
+    m_Scene.addLine(LEFT_BORDER_X,
                       BOTTOM_Y + BOTTOM_Y_OFFSET,
                       RIGHT_BORDER_X + RIGHT_BORDER_X_OFFSET,
                       BOTTOM_Y + BOTTOM_Y_OFFSET,
                       pen);
     /*Right wall*/
-    m_pScene->addLine(RIGHT_BORDER_X + RIGHT_BORDER_X_OFFSET,
+    m_Scene.addLine(RIGHT_BORDER_X + RIGHT_BORDER_X_OFFSET,
                       TOP_Y,
                       RIGHT_BORDER_X + RIGHT_BORDER_X_OFFSET,
                       BOTTOM_Y + BOTTOM_Y_OFFSET,
@@ -126,21 +127,21 @@ void GameWindow::DrawGameArena()
 
 void GameWindow::RestartGame()
 {
-    m_pSnake->Reset();
+    m_Snake.Reset();
 
-    m_pUpdaterTimer->start(GAME_TICK);
+    m_UpdaterTimer.start(GAME_TICK);
 }
 
 void GameWindow::keyPressEvent(QKeyEvent *event)
 {
-    Direction currentDirection = m_pSnake->GetDirection();
+    Direction currentDirection = m_Snake.GetDirection();
 
     switch(event->key())
     {
     case Qt::Key_A:
         if(currentDirection != Direction::right)
         {
-            m_pSnake->SetNextDirection(Direction::left);
+            m_Snake.SetNextDirection(Direction::left);
         }
         qDebug() << "LEFT";
         break;
@@ -148,7 +149,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_W:
         if(currentDirection != Direction::down)
         {
-            m_pSnake->SetNextDirection(Direction::up);
+            m_Snake.SetNextDirection(Direction::up);
         }
         qDebug() << "UP";
         break;
@@ -156,7 +157,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_S:
         if(currentDirection != Direction::up)
         {
-            m_pSnake->SetNextDirection(Direction::down);
+            m_Snake.SetNextDirection(Direction::down);
         }
         qDebug() << "DOWN";
         break;
@@ -164,7 +165,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_D:
         if(currentDirection != Direction::left)
         {
-            m_pSnake->SetNextDirection(Direction::right);
+            m_Snake.SetNextDirection(Direction::right);
         }
         qDebug() << "RIGHT";
         break;
@@ -176,16 +177,16 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
 
 void GameWindow::GameTick()
 {
-    m_pSnake->Move();
-    m_pSnake->SetDirection(m_pSnake->GetNextDirection());
+    m_Snake.Move();
+    m_Snake.SetDirection(m_Snake.GetNextDirection());
 
     //if snake hits a wall
-    if(m_pSnake->GetHeadPosition().x() > MAXIMUM_COLUMN ||
-            m_pSnake->GetHeadPosition().x() < MINIMUM_ROW_COLUMN ||
-            m_pSnake->GetHeadPosition().y() > MAXIMUM_ROW ||
-            m_pSnake->GetHeadPosition().y() < MINIMUM_ROW_COLUMN)
+    if(m_Snake.GetHeadPosition().x() > MAXIMUM_COLUMN ||
+            m_Snake.GetHeadPosition().x() < MINIMUM_ROW_COLUMN ||
+            m_Snake.GetHeadPosition().y() > MAXIMUM_ROW ||
+            m_Snake.GetHeadPosition().y() < MINIMUM_ROW_COLUMN)
     {
-        m_pUpdaterTimer->stop();
+        m_UpdaterTimer.stop();
 
         int answer = QMessageBox::question(this,
                                            "Game Over",
@@ -205,13 +206,13 @@ void GameWindow::GameTick()
     }
 
     //if m_pSnake hit itself
-    QVector<QPoint> m_pSnakePositions = m_pSnake->GetPositions();
+    QVector<QPoint> m_pSnakePositions = m_Snake.GetPositions();
     m_pSnakePositions.removeFirst();
-    QPoint headPosition = m_pSnake->GetHeadPosition();
+    QPoint headPosition = m_Snake.GetHeadPosition();
 
     if(m_pSnakePositions.contains(headPosition))
     {
-        m_pUpdaterTimer->stop();
+        m_UpdaterTimer.stop();
         int answer = QMessageBox::question(this,
                                            "Game Over",
                                            "Restart?",
@@ -230,17 +231,17 @@ void GameWindow::GameTick()
     }
 
     //if m_pSnake head hits m_pFood point
-    if(m_pSnake->GetHeadPosition() == m_pFood->GetPosition())
+    if(m_Snake.GetHeadPosition() == m_Food.GetPosition())
     {
-        m_pDrawer->EraseFood();
-        m_pSnake->Grow();
-        m_pFood->GenerateAndPlace();
-        m_pDrawer->DrawFood(m_pFood->GetPosition());
+        Drawer::EraseFood();
+        m_Snake.Grow();
+        m_Food.GenerateAndPlace();
+        Drawer::DrawFood(m_Food.GetPosition());
     }
 
     //redraw m_pSnake
-    m_pDrawer->EraseSnake();
-    m_pDrawer->DrawSnake(m_pSnake->GetPositions());
+    Drawer::EraseSnake();
+    Drawer::DrawSnake(m_Snake.GetPositions());
 }
 
 GameWindow::~GameWindow()

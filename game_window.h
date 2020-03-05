@@ -8,7 +8,6 @@
 #include <QMessageBox>
 
 #include <snake.h>
-#include <drawer.h>
 #include <food.h>
 
 namespace Ui {
@@ -23,14 +22,14 @@ public:
     explicit GameWindow(QWidget *parent = nullptr);
     ~GameWindow();
 
+    void InitializeGameplayScene();
+
 private:
     Ui::MainWindow* m_pUi;
-    QGraphicsScene* m_pScene;
-
-    QTimer* m_pUpdaterTimer;
-    Drawer* m_pDrawer;
-    Snake* m_pSnake;
-    Food *m_pFood;
+    QGraphicsScene m_Scene;
+    QTimer m_UpdaterTimer;
+    Snake m_Snake;
+    Food m_Food;
 
     void DrawAllSquares();
     void DrawGameArena();

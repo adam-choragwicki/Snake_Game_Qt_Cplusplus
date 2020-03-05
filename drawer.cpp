@@ -1,10 +1,9 @@
 #include "drawer.h"
 #include "utilities.h"
 
-Drawer::Drawer(QGraphicsScene* pScene)
-{
-    m_pScene = pScene;
-}
+QGraphicsScene* Drawer::m_pScene = nullptr;
+QVector<QGraphicsRectItem*> Drawer::m_DrawnItems;
+QGraphicsRectItem* Drawer::m_pDrawnFood = nullptr;
 
 void Drawer::DrawSnake(QVector<QPoint> positions)
 {

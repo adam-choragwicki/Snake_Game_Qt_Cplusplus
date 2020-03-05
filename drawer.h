@@ -9,14 +9,20 @@
 class Drawer
 {
 public:
-    Drawer(QGraphicsScene* pScene);
-    void DrawSnake(QVector<QPoint> positions);
-    void EraseSnake();
-    void DrawFood(QPoint foodPosition);
-    void EraseFood();
+    Drawer() = delete;
+    Drawer(Drawer const&) = delete;
+    Drawer& operator=(Drawer&) = delete;
+    Drawer(Drawer const&&) = delete;
+    Drawer& operator=(Drawer&&) = delete;
+
+    static void SetScene(QGraphicsScene* pScene) {m_pScene = pScene;}
+    static void DrawSnake(QVector<QPoint> positions);
+    static void EraseSnake();
+    static void DrawFood(QPoint foodPosition);
+    static void EraseFood();
 
 private:
-    QGraphicsScene* m_pScene;
-    QVector<QGraphicsRectItem*> m_DrawnItems;
-    QGraphicsRectItem* m_pDrawnFood;
+    static QGraphicsScene* m_pScene;
+    static QVector<QGraphicsRectItem*> m_DrawnItems;
+    static QGraphicsRectItem* m_pDrawnFood;
 };

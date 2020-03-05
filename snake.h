@@ -34,5 +34,5 @@ private:
     QVector<QPoint> m_Positions;
     bool m_IsGrowing;
 
-    QVector<QPoint> m_StartingPositions = {QPoint(26,12), QPoint(24,12), QPoint(23,12)};
+    QVector<QPoint> m_StartingPositions = {QPoint(25,12), QPoint(24,12), QPoint(23,12)};
 };
