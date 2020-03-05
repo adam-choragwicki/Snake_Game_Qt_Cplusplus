@@ -2,50 +2,39 @@
 
 Snake::Snake()
 {
-    Initialize();
-}
+    m_Positions = m_StartingPositions;
+    m_HeadPosition = m_Positions.front();
 
-void Snake::Initialize()
-{
-    m_Positions.append(QPoint(25,12));
-    m_Positions.append(QPoint(24,12));
-    m_Positions.append(QPoint(23,12));
-
-    /*Initial head position X*/
-    m_HeadPosition.setX(m_Positions.front().x());
-    /*Initial head position Y*/
-    m_HeadPosition.setY(m_Positions.front().y());
-
-    SetDirection(right);
-    SetNextDirection(right);
+    SetDirection(Direction::right);
+    SetNextDirection(Direction::right);
 }
 
 void Snake::Move()
 {
     switch(m_Direction)
     {
-    case left:
+    case Direction::left:
         m_Positions.removeLast(); //delete last element
         m_Positions.prepend(QPoint(m_HeadPosition.x() - 1, m_HeadPosition.y()));
         SetHeadPosition(QPoint(m_Positions.front()));
         break;
-    case up:
+    case Direction::up:
         m_Positions.removeLast(); //delete last element
         m_Positions.prepend(QPoint(m_HeadPosition.x(), m_HeadPosition.y() - 1));
         SetHeadPosition(QPoint(m_Positions.front()));
         break;
-    case down:
+    case Direction::down:
         m_Positions.removeLast(); //delete last element
         m_Positions.prepend(QPoint(m_HeadPosition.x(), m_HeadPosition.y() + 1));
         SetHeadPosition(QPoint(m_Positions.front()));
         break;
-    case right:
+    case Direction::right:
         m_Positions.removeLast(); //delete last element
         m_Positions.prepend(QPoint(m_HeadPosition.x() + 1, m_HeadPosition.y()));
         SetHeadPosition(QPoint(m_Positions.front()));
         break;
     default:
-        qDebug() << "Wrong m_Direction in Snake::move(int m_Direction)";
+        assert(false);
     }
 }
 
@@ -53,30 +42,35 @@ void Snake::Grow()
 {
     switch(m_Direction)
     {
-    case left:
+    case Direction::left:
         m_Positions.prepend(QPoint(m_HeadPosition.x() - 1, m_HeadPosition.y()));
         SetHeadPosition(QPoint(m_Positions.front()));
         break;
-    case up:
+    case Direction::up:
         m_Positions.prepend(QPoint(m_HeadPosition.x(), m_HeadPosition.y() - 1));
         SetHeadPosition(QPoint(m_Positions.front()));
         break;
-    case down:
+    case Direction::down:
         m_Positions.prepend(QPoint(m_HeadPosition.x(), m_HeadPosition.y() + 1));
         SetHeadPosition(QPoint(m_Positions.front()));
         break;
-    case right:
+    case Direction::right:
         m_Positions.prepend(QPoint(m_HeadPosition.x() + 1, m_HeadPosition.y()));
         SetHeadPosition(QPoint(m_Positions.front()));
         break;
     default:
-        qDebug() << "Wrong m_Direction in Snake::grow(int m_Direction)";
+        assert(false);
     }
 }
 
-//used to restart game
-void Snake::ClearPositions()
+void Snake::Reset()
 {
     m_Positions.clear();
     m_Positions.squeeze();
+
+    m_Positions = m_StartingPositions;
+    m_HeadPosition = m_Positions.front();
+
+    SetDirection(Direction::right);
+    SetNextDirection(Direction::right);
 }

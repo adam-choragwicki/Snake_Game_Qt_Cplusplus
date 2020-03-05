@@ -1,4 +1,5 @@
 #include "drawer.h"
+#include "utilities.h"
 
 Drawer::Drawer(QGraphicsScene* pScene)
 {
@@ -13,10 +14,10 @@ void Drawer::DrawSnake(QVector<QPoint> positions)
     //fill queue with drawn items
     for(auto position : positions)
     {
-        m_DrawnItems.append(m_pScene->addRect(30 + position.x()*30,
-                                              30 + position.y()*30,
-                                              m_SquareSize,
-                                              m_SquareSize,
+        m_DrawnItems.append(m_pScene->addRect(position.x() * SQUARE_SIZE  + SQUARE_SIZE,
+                                              position.y() * SQUARE_SIZE  + SQUARE_SIZE,
+                                              SQUARE_SIZE,
+                                              SQUARE_SIZE,
                                               redPen,
                                               greenBrush));
     }
@@ -38,10 +39,10 @@ void Drawer::DrawFood(QPoint foodPosition)
     QPen redPen(Qt::red);
     QBrush redBrush(Qt::red);
 
-    m_pDrawnFood = m_pScene->addRect(30 + foodPosition.x() * 30,
-                                     30 + foodPosition.y() * 30,
-                                     m_SquareSize,
-                                     m_SquareSize,
+    m_pDrawnFood = m_pScene->addRect(foodPosition.x() * SQUARE_SIZE + SQUARE_SIZE,
+                                     foodPosition.y() * SQUARE_SIZE + SQUARE_SIZE,
+                                     SQUARE_SIZE,
+                                     SQUARE_SIZE,
                                      redPen,
                                      redBrush);
 }

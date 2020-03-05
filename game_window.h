@@ -32,10 +32,8 @@ private:
     Snake* m_pSnake;
     Food *m_pFood;
 
-    int m_SquareSize = 29;
-
     void DrawAllSquares();
-    void DrawArena();
+    void DrawGameArena();
     void RestartGame();
 
     void keyPressEvent(QKeyEvent *event) override;

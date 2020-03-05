@@ -19,6 +19,4 @@ private:
     QGraphicsScene* m_pScene;
     QVector<QGraphicsRectItem*> m_DrawnItems;
     QGraphicsRectItem* m_pDrawnFood;
-
-    int m_SquareSize = 29;
 };
