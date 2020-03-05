@@ -23,20 +23,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    game_window.cpp \
         main.cpp \
-        mainwindow.cpp \
     snake.cpp \
     food.cpp \
     drawer.cpp
 
 HEADERS += \
-        mainwindow.h \
+    game_window.h \
     snake.h \
     food.h \
-    drawer.h
+    drawer.h \
+    utilities.h
 
 FORMS += \
-        mainwindow.ui
+    game_window.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

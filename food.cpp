@@ -5,16 +5,16 @@ Food::Food()
     
 }
 
-void Food::generateAndPlace()
+void Food::GenerateAndPlace()
 {
     int positionX, positionY;
 
-    positionX = randomGenerator.bounded(1,50);
-    positionY = randomGenerator.bounded(1,25);
+    positionX = m_RandomGenerator.bounded(1,50);
+    positionY = m_RandomGenerator.bounded(1,25);
 
     qDebug() << "Pozycja X: " << positionX;
     qDebug() << "Pozycja Y: " << positionY;
 
-    position.setX(positionX);
-    position.setY(positionY);
+    m_Position.setX(positionX);
+    m_Position.setY(positionY);
 }

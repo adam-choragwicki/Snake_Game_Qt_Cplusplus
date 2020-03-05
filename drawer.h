@@ -1,5 +1,4 @@
-#ifndef DRAWER_H
-#define DRAWER_H
+#pragma once
 
 #include <QObject>
 #include <QGraphicsScene>
@@ -10,18 +9,16 @@
 class Drawer
 {
 public:
-    Drawer(QGraphicsScene *mainScene);
-    void drawSnake(QVector<QPoint> positions);
-    void eraseSnake();
-    void drawFood(QPoint foodPos);
-    void eraseFood();
+    Drawer(QGraphicsScene* pScene);
+    void DrawSnake(QVector<QPoint> positions);
+    void EraseSnake();
+    void DrawFood(QPoint foodPosition);
+    void EraseFood();
 
 private:
-    QGraphicsScene *scene;
-    QVector<QGraphicsRectItem*> drawnItems;
-    QGraphicsRectItem *drawnFood;
+    QGraphicsScene* m_pScene;
+    QVector<QGraphicsRectItem*> m_DrawnItems;
+    QGraphicsRectItem* m_pDrawnFood;
 
-    int square_size = 29;
+    int m_SquareSize = 29;
 };
-
-#endif // DRAWER_H

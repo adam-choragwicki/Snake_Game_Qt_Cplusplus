@@ -1,57 +1,52 @@
 #include "drawer.h"
 
-Drawer::Drawer(QGraphicsScene *mainScene)
+Drawer::Drawer(QGraphicsScene* pScene)
 {
-    scene = mainScene;
-
-    QPen red_pen(Qt::red);
-    QBrush red_brush(Qt::red);
-
-    QPen green_pen(Qt::green);
-    QBrush green_brush(Qt::green);
-
-    QPen blue_pen(Qt::blue);
-    QBrush blue_brush(Qt::blue);
+    m_pScene = pScene;
 }
 
-void Drawer::drawSnake(QVector<QPoint> positions)
+void Drawer::DrawSnake(QVector<QPoint> positions)
 {
-    QPen red_pen(Qt::red);
-    QBrush red_brush(Qt::red);
-
-    QPen green_pen(Qt::green);
-    QBrush green_brush(Qt::green);
-
-    QPen blue_pen(Qt::blue);
-    QBrush blue_brush(Qt::blue);
+    QPen redPen(Qt::red);
+    QBrush greenBrush(Qt::green);
 
     //fill queue with drawn items
-    for(auto item : positions)
+    for(auto position : positions)
     {
-        drawnItems.append(scene->addRect(30 + item.x()*30, 30 + item.y()*30,square_size,square_size, red_pen, green_brush));
+        m_DrawnItems.append(m_pScene->addRect(30 + position.x()*30,
+                                              30 + position.y()*30,
+                                              m_SquareSize,
+                                              m_SquareSize,
+                                              redPen,
+                                              greenBrush));
     }
 }
 
-void Drawer::eraseSnake()
+void Drawer::EraseSnake()
 {
-    for(auto item : drawnItems)
+    for(auto item : m_DrawnItems)
     {
-        scene->removeItem(item);
+        m_pScene->removeItem(item);
     }
 
-    drawnItems.clear();
-    drawnItems.squeeze();
+    m_DrawnItems.clear();
+    m_DrawnItems.squeeze();
 }
 
-void Drawer::drawFood(QPoint foodPos)
+void Drawer::DrawFood(QPoint foodPosition)
 {
-    QPen red_pen(Qt::red);
-    QBrush red_brush(Qt::red);
+    QPen redPen(Qt::red);
+    QBrush redBrush(Qt::red);
 
-    drawnFood = scene->addRect(30 + foodPos.x()*30, 30 + foodPos.y()*30,square_size,square_size, red_pen, red_brush);
+    m_pDrawnFood = m_pScene->addRect(30 + foodPosition.x() * 30,
+                                     30 + foodPosition.y() * 30,
+                                     m_SquareSize,
+                                     m_SquareSize,
+                                     redPen,
+                                     redBrush);
 }
 
-void Drawer::eraseFood()
+void Drawer::EraseFood()
 {
-    scene->removeItem(drawnFood);
+    m_pScene->removeItem(m_pDrawnFood);
 }

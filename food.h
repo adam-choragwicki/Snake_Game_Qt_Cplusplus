@@ -1,5 +1,4 @@
-#ifndef FOOD_H
-#define FOOD_H
+#pragma once
 
 #include <QObject>
 #include <QRandomGenerator>
@@ -8,16 +7,14 @@
 
 class Food
 {
-private:
-    QRandomGenerator randomGenerator;
-    QPoint position;
-
 public:
     Food();
 
-    void generateAndPlace();
-    void setPosition(QPoint pos) {position = pos;}
-    QPoint getPosition() {return position;}
-};
+    void GenerateAndPlace();
+    void SetPosition(QPoint position){m_Position = position;}
+    QPoint GetPosition() {return m_Position;}
 
-#endif // FOOD_H
+private:
+    QRandomGenerator m_RandomGenerator;
+    QPoint m_Position;
+};

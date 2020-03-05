@@ -1,5 +1,4 @@
-#ifndef SNAKE_H
-#define SNAKE_H
+#pragma once
 
 #include <QObject>
 #include <QVector>
@@ -8,35 +7,33 @@
 
 class Snake
 {
-private:
-    int size;
-    int direction;
-    int nextDirection;
-    QPoint headPosition;
-    QPoint tailPosition;
-    QVector<QPoint> positions;
-    bool isGrowing;
-
 public:
     Snake();
-    void initialize();
-    void move();
-    bool isMovePossible();
-    void grow();
+    void Initialize();
+    void Move();
+    bool IsMovePossible();
+    void Grow();
 
-    void clearPositions();
+    void ClearPositions();
 
-    void setHeadPosition(QPoint headPoint);
-    void setDirection(int dir);
-    void setNextDirection(int nextdir);
+    void SetHeadPosition(QPoint headPosition) {m_HeadPosition = headPosition;}
+    void SetDirection(int direction) {m_Direction = direction;}
+    void SetNextDirection(int nextDirection) {m_NextDirection = nextDirection;}
 
-    QVector<QPoint> getPositions() {return positions;}
-    QPoint getHeadPosition() {return headPosition;}
-    QPoint getTailPosition() {return tailPosition;}
-    int getDirection() {return direction;}
-    int getNextDirection() {return nextDirection;}
+    QVector<QPoint> GetPositions() {return m_Positions;}
+    QPoint GetHeadPosition() {return m_HeadPosition;}
+    QPoint GetTailPosition() {return m_TailPosition;}
+    int GetDirection() {return m_Direction;}
+    int GetNextDirection() {return m_NextDirection;}
 
     enum direction {left = 1, up = 2, down = 3, right = 4};
-};
 
-#endif // SNAKE_H
+private:
+    int m_Size;
+    int m_Direction;
+    int m_NextDirection;
+    QPoint m_HeadPosition;
+    QPoint m_TailPosition;
+    QVector<QPoint> m_Positions;
+    bool m_IsGrowing;
+};
