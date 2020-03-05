@@ -7,6 +7,7 @@ QGraphicsScene* Drawer::m_pScene = nullptr;
 void Drawer::DrawSnake(QVector<QPoint> const& snakeSquarePositions, QVector<QGraphicsRectItem*>& snakeSquaresGraphicalRectItems)
 {
     QPen redPen(Qt::red);
+    QBrush yellowBrush(Qt::yellow);
     QBrush greenBrush(Qt::green);
 
     for(auto snakeSquarePosition : snakeSquarePositions)
@@ -18,6 +19,9 @@ void Drawer::DrawSnake(QVector<QPoint> const& snakeSquarePositions, QVector<QGra
                                                                 redPen,
                                                                 greenBrush));
     }
+
+    /*Set head color*/
+    snakeSquaresGraphicalRectItems.at(0)->setBrush(yellowBrush);
 }
 
 void Drawer::EraseSnake(QVector<QGraphicsRectItem*>& snakeSquaresGraphicalRectItems)
