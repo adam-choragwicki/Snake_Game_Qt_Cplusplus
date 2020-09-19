@@ -515,7 +515,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Adjust slider or press num +/- to change speed</string>
+           <string>Adjust slider or press num +/- to change speed. Press space for temporary speed boost</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>

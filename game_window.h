@@ -39,8 +39,11 @@ private:
     void CheckSnakeCollisionWithItself();
     void RedrawSnake();
     void SetGameSpeedLevel(int speedLevel);
+    void ActivateSpeedBoost();
+    void DectivateSpeedBoost();
 
     void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
 
     void DialogRestartGame();
 

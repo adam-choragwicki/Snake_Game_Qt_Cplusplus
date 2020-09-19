@@ -97,8 +97,22 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
         m_pUi->m_SpeedHorizontalSlider->setValue(sliderValue + 1);
         break;
 
+    case Qt::Key_Space:
+        ActivateSpeedBoost();
+        break;
+
     default:
         qDebug() << "Wrong key pressed";
+    }
+}
+
+void GameWindow::keyReleaseEvent(QKeyEvent *event)
+{
+    switch(event->key())
+    {
+    case Qt::Key_Space:
+        DectivateSpeedBoost();
+        break;
     }
 }
 
@@ -190,4 +204,15 @@ void GameWindow::SetGameSpeedLevel(int speedLevel)
     const int TIME_OFFSET = 20;
 
     m_GameTickTimer.setInterval(TIME_OFFSET + speedLevel * 20);
+}
+
+void GameWindow::ActivateSpeedBoost()
+{
+    const int BOOST_VALUE = 20;
+    m_GameTickTimer.setInterval(BOOST_VALUE);
+}
+
+void GameWindow::DectivateSpeedBoost()
+{
+    SetGameSpeedLevel(m_pUi->m_SpeedHorizontalSlider->value());
 }
