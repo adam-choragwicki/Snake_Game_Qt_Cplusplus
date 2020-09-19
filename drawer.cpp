@@ -1,5 +1,4 @@
 #include "drawer.h"
-#include "utilities.h"
 #include <QDebug>
 
 QGraphicsScene* Drawer::m_pScene = nullptr;
@@ -53,4 +52,91 @@ QGraphicsRectItem* Drawer::DrawFood(QPoint foodPosition)
 void Drawer::EraseFood(QGraphicsRectItem* pFoodSquareGraphicalRectItem)
 {
     m_pScene->removeItem(pFoodSquareGraphicalRectItem);
+}
+
+void Drawer::DrawAllSquares()
+{
+    QBrush redBrush(Qt::red);
+    QBrush greenBrush(Qt::green);
+
+    for(int column = 0 ; column < COLUMNS_COUNT; column++)
+    {
+        for(int row = 0; row < ROWS_COUNT; row++)
+        {
+            /*Even columns*/
+            if(column % 2 == 0)
+            {
+                if(row % 2 == 0)
+                {
+                    m_pScene->addRect(column * SQUARE_SIZE + SQUARE_SIZE,
+                                    row * SQUARE_SIZE + SQUARE_SIZE,
+                                    SQUARE_SIZE,
+                                    SQUARE_SIZE,
+                                    Qt::NoPen,
+                                    redBrush);
+                }
+                else
+                {
+                    m_pScene->addRect(column * SQUARE_SIZE + SQUARE_SIZE,
+                                    row * SQUARE_SIZE + SQUARE_SIZE,
+                                    SQUARE_SIZE,
+                                    SQUARE_SIZE,
+                                    Qt::NoPen,
+                                    greenBrush);
+                }
+            }
+            /*Odd columns*/
+            else
+            {
+                if(row % 2 == 0)
+                {
+                    m_pScene->addRect(column * SQUARE_SIZE + SQUARE_SIZE,
+                                    row * SQUARE_SIZE + SQUARE_SIZE,
+                                    SQUARE_SIZE,
+                                    SQUARE_SIZE,
+                                    Qt::NoPen,
+                                    greenBrush);
+                }
+                else
+                {
+                    m_pScene->addRect(column * SQUARE_SIZE + SQUARE_SIZE,
+                                    row * SQUARE_SIZE + SQUARE_SIZE,
+                                    SQUARE_SIZE,
+                                    SQUARE_SIZE,
+                                    Qt::NoPen,
+                                    redBrush);
+                }
+            }
+        }
+    }
+}
+
+void Drawer::DrawGameArena()
+{
+    QPen pen(Qt::white, SQUARE_SIZE);
+
+    /*Top wall*/
+    m_pScene->addLine(LEFT_BORDER_X,
+                    TOP_Y,
+                    RIGHT_BORDER_X + RIGHT_BORDER_X_OFFSET,
+                    TOP_Y,
+                    pen);
+    /*Left wall*/
+    m_pScene->addLine(LEFT_BORDER_X,
+                    TOP_Y,
+                    LEFT_BORDER_X,
+                    BOTTOM_Y + BOTTOM_Y_OFFSET,
+                    pen);
+    /*Bottom wall*/
+    m_pScene->addLine(LEFT_BORDER_X,
+                    BOTTOM_Y + BOTTOM_Y_OFFSET,
+                    RIGHT_BORDER_X + RIGHT_BORDER_X_OFFSET,
+                    BOTTOM_Y + BOTTOM_Y_OFFSET,
+                    pen);
+    /*Right wall*/
+    m_pScene->addLine(RIGHT_BORDER_X + RIGHT_BORDER_X_OFFSET,
+                    TOP_Y,
+                    RIGHT_BORDER_X + RIGHT_BORDER_X_OFFSET,
+                    BOTTOM_Y + BOTTOM_Y_OFFSET,
+                    pen);
 }

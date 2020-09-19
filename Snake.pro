@@ -33,8 +33,7 @@ HEADERS += \
     game_window.h \
     snake.h \
     food.h \
-    drawer.h \
-    utilities.h
+    drawer.h
 
 FORMS += \
     game_window.ui

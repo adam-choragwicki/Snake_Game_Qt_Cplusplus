@@ -5,11 +5,14 @@
 #include <QPoint>
 #include <QDebug>
 #include <QGraphicsRectItem>
-#include "utilities.h"
+#include "drawer.h"
 
 class Snake
 {
 public:
+    /*Forward declaration*/
+    enum class Direction;
+
     Snake();
     void Move();
     bool IsMovePossible();
@@ -28,14 +31,22 @@ public:
     Direction& GetNextDirection() {return m_NextDirection;}
     QVector<QGraphicsRectItem*>& GetSnakeSquaresGraphicalRectItems() {return m_SnakeSquaresGraphicalRectItems;}
 
+    enum class Direction
+    {
+        left = 1,
+        up = 2,
+        down = 3,
+        right = 4
+    };
+
 private:
     Direction m_Direction;
     Direction m_NextDirection;
     QPoint m_HeadPosition;
     QVector<QPoint> m_Positions;
-    QVector<QPoint> m_StartingPositions = {QPoint(COLUMNS_COUNT/2 + 2, ROWS_COUNT/2),
-                                           QPoint(COLUMNS_COUNT/2 + 1, ROWS_COUNT/2),
-                                           QPoint(COLUMNS_COUNT/2, ROWS_COUNT/2)};
+    QVector<QPoint> m_StartingPositions = {QPoint(Drawer::COLUMNS_COUNT/2 + 2, Drawer::ROWS_COUNT/2),
+                                           QPoint(Drawer::COLUMNS_COUNT/2 + 1, Drawer::ROWS_COUNT/2),
+                                           QPoint(Drawer::COLUMNS_COUNT/2, Drawer::ROWS_COUNT/2)};
 
     QVector<QGraphicsRectItem*> m_SnakeSquaresGraphicalRectItems;
 };

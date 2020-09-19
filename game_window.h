@@ -33,7 +33,7 @@ private:
 
     void DrawAllSquares();
     void DrawGameArena();
-    void RestartGame();
+    void StartGame();
     void CheckSnakeCollisionWithWall();
     void CheckSnakeCollisionWithFoodSquare();
     void CheckSnakeCollisionWithItself();
