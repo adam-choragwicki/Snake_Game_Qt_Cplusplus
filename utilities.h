@@ -17,8 +17,6 @@ int const TOP_Y = SQUARE_SIZE/2;
 int const BOTTOM_Y = ROWS_COUNT * SQUARE_SIZE + 2 * WALL_THICKNESS;
 int const BOTTOM_Y_OFFSET = -SQUARE_SIZE/2;
 
-int const GAME_TICK = 100;
-
 enum class Direction
 {
     left = 1,

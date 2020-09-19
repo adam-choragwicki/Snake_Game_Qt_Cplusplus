@@ -11,7 +11,7 @@
 #include <food.h>
 
 namespace Ui {
-class MainWindow;
+class GameWindow;
 }
 
 class GameWindow : public QMainWindow
@@ -25,9 +25,9 @@ public:
     void InitializeGameplayScene();
 
 private:
-    Ui::MainWindow* m_pUi;
+    Ui::GameWindow* m_pUi;
     QGraphicsScene m_Scene;
-    QTimer m_UpdaterTimer;
+    QTimer m_GameTickTimer;
     Snake m_Snake;
     Food m_Food;
 
@@ -38,9 +38,11 @@ private:
     void CheckSnakeCollisionWithFoodSquare();
     void CheckSnakeCollisionWithItself();
     void RedrawSnake();
+    void SetGameSpeedLevel(int speedLevel);
 
-        void keyPressEvent(QKeyEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
     void GameTick();
+    void on_m_SpeedHorizontalSlider_valueChanged(int value);
 };
