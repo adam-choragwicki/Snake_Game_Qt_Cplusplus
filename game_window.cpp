@@ -6,10 +6,10 @@ GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::Gam
 {
     m_pUi->setupUi(this);
 
+    setWindowTitle("Snake");
     setFocus(Qt::ActiveWindowFocusReason);
-    this->setWindowTitle("Snake");
 
-    InitializeGameplayScene();
+    InitializeGameplayAreaScene();
 
     Drawer::SetScene(&m_Scene);
 
@@ -24,7 +24,12 @@ GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::Gam
     StartGame();
 }
 
-void GameWindow::InitializeGameplayScene()
+GameWindow::~GameWindow()
+{
+    delete m_pUi;
+}
+
+void GameWindow::InitializeGameplayAreaScene()
 {
     m_pUi->m_GraphicsView->setScene(&m_Scene);
     m_Scene.setBackgroundBrush(QBrush(Qt::black));
@@ -117,20 +122,25 @@ void GameWindow::CheckSnakeCollisionWithWall()
     {
         m_GameTickTimer.stop();
 
-        int answer = QMessageBox::question(this,
-                                           "Snake has hit the wall",
-                                           "Restart?",
-                                           QMessageBox::StandardButton::Ok,
-                                           QMessageBox::StandardButton::Cancel);
+        DialogRestartGame();
+    }
+}
 
-        if(answer == QMessageBox::Ok)
-        {
-            StartGame();
-        }
-        else
-        {
-            exit(0);
-        }
+void GameWindow::DialogRestartGame()
+{
+    int answer = QMessageBox::question(this,
+                                       "Game over",
+                                       "Restart?",
+                                       QMessageBox::StandardButton::Ok,
+                                       QMessageBox::StandardButton::Cancel);
+
+    if(answer == QMessageBox::Ok)
+    {
+        StartGame();
+    }
+    else
+    {
+        exit(0);
     }
 }
 
@@ -147,20 +157,8 @@ void GameWindow::CheckSnakeCollisionWithItself()
     if(snakePositions.contains(headPosition))
     {
         m_GameTickTimer.stop();
-        int answer = QMessageBox::question(this,
-                                           "Snake has hit itself",
-                                           "Restart?",
-                                           QMessageBox::StandardButton::Ok,
-                                           QMessageBox::StandardButton::Cancel);
 
-        if(answer == QMessageBox::Ok)
-        {
-            StartGame();
-        }
-        else
-        {
-            exit(0);
-        }
+        DialogRestartGame();
     }
 }
 
@@ -180,11 +178,6 @@ void GameWindow::GameTick()
     CheckSnakeCollisionWithFoodSquare();
 
     RedrawSnake();
-}
-
-GameWindow::~GameWindow()
-{
-    delete m_pUi;
 }
 
 void GameWindow::on_m_SpeedHorizontalSlider_valueChanged(int value)

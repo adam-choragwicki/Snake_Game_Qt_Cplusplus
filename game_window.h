@@ -22,7 +22,7 @@ public:
     explicit GameWindow(QWidget *parent = nullptr);
     ~GameWindow();
 
-    void InitializeGameplayScene();
+    void InitializeGameplayAreaScene();
 
 private:
     Ui::GameWindow* m_pUi;
@@ -41,6 +41,8 @@ private:
     void SetGameSpeedLevel(int speedLevel);
 
     void keyPressEvent(QKeyEvent *event) override;
+
+    void DialogRestartGame();
 
 private slots:
     void GameTick();
