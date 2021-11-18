@@ -1,4 +1,4 @@
-#include "snake.h"
+#include "inc/snake.h"
 
 Snake::Snake()
 {

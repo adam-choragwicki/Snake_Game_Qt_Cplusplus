@@ -1,4 +1,4 @@
-#include "drawer.h"
+#include "inc/drawer.h"
 #include <QDebug>
 
 QGraphicsScene* Drawer::m_pScene = nullptr;

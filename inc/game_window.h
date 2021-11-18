@@ -1,14 +1,12 @@
 #pragma once
 
-#include <QMainWindow>
-#include <QGraphicsScene>
-#include <QDebug>
-#include <QTimer>
-#include <QKeyEvent>
-#include <QMessageBox>
+#include "snake.h"
+#include "food.h"
 
-#include <snake.h>
-#include <food.h>
+#include <QMainWindow>
+#include <QTimer>
+#include <QMessageBox>
+#include <QKeyEvent>
 
 namespace Ui {
 class GameWindow;
@@ -42,8 +40,8 @@ private:
     void ActivateSpeedBoost();
     void DectivateSpeedBoost();
 
-    void keyPressEvent(QKeyEvent *event) override;
-    void keyReleaseEvent(QKeyEvent *event) override;
+    void keyPressEvent(QKeyEvent* event) override;
+    void keyReleaseEvent(QKeyEvent* event) override;
 
     void DialogRestartGame();
 

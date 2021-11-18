@@ -1,6 +1,6 @@
-#include "game_window.h"
+#include "inc/game_window.h"
 #include "ui_game_window.h"
-#include <drawer.h>
+#include "inc/drawer.h"
 
 GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::GameWindow)
 {

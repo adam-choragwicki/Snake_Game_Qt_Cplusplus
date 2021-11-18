@@ -1,5 +1,5 @@
-#include "food.h"
-#include "drawer.h"
+#include "inc/food.h"
+#include "inc/drawer.h"
 
 Food::Food()
 {

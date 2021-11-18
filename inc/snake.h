@@ -1,11 +1,12 @@
 #pragma once
 
+#include "drawer.h"
+
 #include <QObject>
 #include <QVector>
 #include <QPoint>
 #include <QDebug>
 #include <QGraphicsRectItem>
-#include "drawer.h"
 
 class Snake
 {
