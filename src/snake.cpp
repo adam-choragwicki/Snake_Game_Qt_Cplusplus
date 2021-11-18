@@ -2,39 +2,39 @@
 
 Snake::Snake()
 {
-    m_Positions = m_StartingPositions;
-    m_HeadPosition = m_Positions.front();
+    positions_ = startingPositions_;
+    headPosition_ = positions_.front();
 
-    SetDirection(Direction::right);
-    SetNextDirection(Direction::right);
+    setDirection(Direction::right);
+    setNextDirection(Direction::right);
 }
 
-void Snake::Move()
+void Snake::move()
 {
-    switch(m_Direction)
+    switch(direction_)
     {
     case Direction::left:
-        m_Positions.removeLast(); //delete last element
-        m_Positions.prepend(QPoint(m_HeadPosition.x() - 1, m_HeadPosition.y()));
-        SetHeadPosition(QPoint(m_Positions.front()));
+        positions_.removeLast(); //delete last element
+        positions_.prepend(QPoint(headPosition_.x() - 1, headPosition_.y()));
+        setHeadPosition(QPoint(positions_.front()));
         break;
 
     case Direction::up:
-        m_Positions.removeLast(); //delete last element
-        m_Positions.prepend(QPoint(m_HeadPosition.x(), m_HeadPosition.y() - 1));
-        SetHeadPosition(QPoint(m_Positions.front()));
+        positions_.removeLast(); //delete last element
+        positions_.prepend(QPoint(headPosition_.x(), headPosition_.y() - 1));
+        setHeadPosition(QPoint(positions_.front()));
         break;
 
     case Direction::down:
-        m_Positions.removeLast(); //delete last element
-        m_Positions.prepend(QPoint(m_HeadPosition.x(), m_HeadPosition.y() + 1));
-        SetHeadPosition(QPoint(m_Positions.front()));
+        positions_.removeLast(); //delete last element
+        positions_.prepend(QPoint(headPosition_.x(), headPosition_.y() + 1));
+        setHeadPosition(QPoint(positions_.front()));
         break;
 
     case Direction::right:
-        m_Positions.removeLast(); //delete last element
-        m_Positions.prepend(QPoint(m_HeadPosition.x() + 1, m_HeadPosition.y()));
-        SetHeadPosition(QPoint(m_Positions.front()));
+        positions_.removeLast(); //delete last element
+        positions_.prepend(QPoint(headPosition_.x() + 1, headPosition_.y()));
+        setHeadPosition(QPoint(positions_.front()));
         break;
 
     default:
@@ -42,28 +42,28 @@ void Snake::Move()
     }
 }
 
-void Snake::Grow()
+void Snake::grow()
 {
-    switch(m_Direction)
+    switch(direction_)
     {
     case Direction::left:
-        m_Positions.prepend(QPoint(m_HeadPosition.x() - 1, m_HeadPosition.y()));
-        SetHeadPosition(QPoint(m_Positions.front()));
+        positions_.prepend(QPoint(headPosition_.x() - 1, headPosition_.y()));
+        setHeadPosition(QPoint(positions_.front()));
         break;
 
     case Direction::up:
-        m_Positions.prepend(QPoint(m_HeadPosition.x(), m_HeadPosition.y() - 1));
-        SetHeadPosition(QPoint(m_Positions.front()));
+        positions_.prepend(QPoint(headPosition_.x(), headPosition_.y() - 1));
+        setHeadPosition(QPoint(positions_.front()));
         break;
 
     case Direction::down:
-        m_Positions.prepend(QPoint(m_HeadPosition.x(), m_HeadPosition.y() + 1));
-        SetHeadPosition(QPoint(m_Positions.front()));
+        positions_.prepend(QPoint(headPosition_.x(), headPosition_.y() + 1));
+        setHeadPosition(QPoint(positions_.front()));
         break;
 
     case Direction::right:
-        m_Positions.prepend(QPoint(m_HeadPosition.x() + 1, m_HeadPosition.y()));
-        SetHeadPosition(QPoint(m_Positions.front()));
+        positions_.prepend(QPoint(headPosition_.x() + 1, headPosition_.y()));
+        setHeadPosition(QPoint(positions_.front()));
         break;
 
     default:
@@ -71,17 +71,17 @@ void Snake::Grow()
     }
 }
 
-void Snake::Reset()
+void Snake::reset()
 {
-    m_Positions.clear();
-    m_Positions.squeeze();
+    positions_.clear();
+    positions_.squeeze();
 
-    m_Positions = m_StartingPositions;
+    positions_ = startingPositions_;
 
-    qDebug() << "Starting positions: " << m_StartingPositions;
+    qDebug() << "Starting positions: " << startingPositions_;
 
-    m_HeadPosition = m_Positions.front();
+    headPosition_ = positions_.front();
 
-    SetDirection(Direction::right);
-    SetNextDirection(Direction::right);
+    setDirection(Direction::right);
+    setNextDirection(Direction::right);
 }

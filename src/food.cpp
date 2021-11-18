@@ -1,20 +1,21 @@
 #include "inc/food.h"
 #include "inc/drawer.h"
+#include "inc/common.h"
 
 Food::Food()
 {
-    m_pFoodSquareGraphicalRectItem = nullptr;
+    foodSquareGraphicalRectItem_ = nullptr;
 }
 
-void Food::GenerateAndPlace()
+void Food::generateAndPlace()
 {
-    m_pFoodSquareGraphicalRectItem = nullptr;
+    foodSquareGraphicalRectItem_ = nullptr;
 
-    int positionX = m_RandomGenerator.bounded(Drawer::MINIMUM_ROW_COLUMN, Drawer::MAXIMUM_COLUMN);
-    int positionY = m_RandomGenerator.bounded(Drawer::MINIMUM_ROW_COLUMN, Drawer::MAXIMUM_ROW);
+    int positionX = randomGenerator_.bounded(gameArenaParameters::MINIMUM_ROW_COLUMN, gameArenaParameters::MAXIMUM_COLUMN);
+    int positionY = randomGenerator_.bounded(gameArenaParameters::MINIMUM_ROW_COLUMN, gameArenaParameters::MAXIMUM_ROW);
 
-    m_Position.setX(positionX);
-    m_Position.setY(positionY);
+    position_.setX(positionX);
+    position_.setY(positionY);
 
-    m_pFoodSquareGraphicalRectItem = Drawer::DrawFood(m_Position);
+    foodSquareGraphicalRectItem_ = Drawer::drawFood(position_);
 }

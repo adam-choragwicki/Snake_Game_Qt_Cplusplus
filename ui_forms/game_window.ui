@@ -478,7 +478,7 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QGraphicsView" name="m_GraphicsView">
+       <widget class="QGraphicsView" name="graphicsView">
         <property name="enabled">
          <bool>true</bool>
         </property>
@@ -505,7 +505,7 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QLabel" name="m_SpeedSliderLabel">
+         <widget class="QLabel" name="label_SpeedSlider">
           <property name="font">
            <font>
             <family>Arial</family>
@@ -531,7 +531,7 @@
            <enum>QLayout::SetDefaultConstraint</enum>
           </property>
           <item>
-           <widget class="QLabel" name="m_MinSpeedLabel">
+           <widget class="QLabel" name="label_MinSpeed">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -551,7 +551,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSlider" name="m_SpeedHorizontalSlider">
+           <widget class="QSlider" name="slider_Speed">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -1033,7 +1033,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="m_MaxSpeedLabel">
+           <widget class="QLabel" name="label_MaxSpeed">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
               <horstretch>0</horstretch>

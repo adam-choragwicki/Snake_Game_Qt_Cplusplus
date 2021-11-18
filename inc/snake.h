@@ -1,6 +1,7 @@
 #pragma once
 
 #include "drawer.h"
+#include "common.h"
 
 #include <QObject>
 #include <QVector>
@@ -15,22 +16,21 @@ public:
     enum class Direction;
 
     Snake();
-    void Move();
-    bool IsMovePossible();
-    void Grow();
-    void Reset();
+    void move();
+    bool isMovePossible();
+    void grow();
+    void reset();
 
-    void SetHeadPosition(QPoint headPosition) {m_HeadPosition = headPosition;}
-    void SetDirection(Direction direction) {m_Direction = direction;}
-    void SetNextDirection(Direction nextDirection) {m_NextDirection = nextDirection;}
-    void SetSnakeSquaresGraphicalRectItems(QVector<QGraphicsRectItem*> const& snakeSquaresGraphicalRectItems)
-    {m_SnakeSquaresGraphicalRectItems = snakeSquaresGraphicalRectItems;}
+    void setHeadPosition(QPoint headPosition) {headPosition_ = headPosition;}
+    void setDirection(Direction direction) {direction_ = direction;}
+    void setNextDirection(Direction nextDirection) {nextDirection_ = nextDirection;}
+    void setSnakeSquaresGraphicalRectItems(const QVector<QGraphicsRectItem*>& snakeSquaresGraphicalRectItems) {snakeSquaresGraphicalRectItems_ = snakeSquaresGraphicalRectItems;}
 
-    QVector<QPoint>& GetPositions() {return m_Positions;}
-    QPoint& GetHeadPosition() {return m_HeadPosition;}
-    Direction& GetDirection() {return m_Direction;}
-    Direction& GetNextDirection() {return m_NextDirection;}
-    QVector<QGraphicsRectItem*>& GetSnakeSquaresGraphicalRectItems() {return m_SnakeSquaresGraphicalRectItems;}
+    QVector<QPoint>& getPositions() {return positions_;}
+    QPoint& getHeadPosition() {return headPosition_;}
+    Direction& getDirection() {return direction_;}
+    Direction& getNextDirection() {return nextDirection_;}
+    QVector<QGraphicsRectItem*>& getSnakeSquaresGraphicalRectItems() {return snakeSquaresGraphicalRectItems_;}
 
     enum class Direction
     {
@@ -41,13 +41,13 @@ public:
     };
 
 private:
-    Direction m_Direction;
-    Direction m_NextDirection;
-    QPoint m_HeadPosition;
-    QVector<QPoint> m_Positions;
-    QVector<QPoint> m_StartingPositions = {QPoint(Drawer::COLUMNS_COUNT/2 + 2, Drawer::ROWS_COUNT/2),
-                                           QPoint(Drawer::COLUMNS_COUNT/2 + 1, Drawer::ROWS_COUNT/2),
-                                           QPoint(Drawer::COLUMNS_COUNT/2, Drawer::ROWS_COUNT/2)};
+    Direction direction_;
+    Direction nextDirection_;
+    QPoint headPosition_;
+    QVector<QPoint> positions_;
+    QVector<QGraphicsRectItem*> snakeSquaresGraphicalRectItems_;
 
-    QVector<QGraphicsRectItem*> m_SnakeSquaresGraphicalRectItems;
+    const QVector<QPoint> startingPositions_ = {QPoint(gameArenaParameters::COLUMNS_COUNT/2 + 2, gameArenaParameters::ROWS_COUNT/2),
+                                                QPoint(gameArenaParameters::COLUMNS_COUNT/2 + 1, gameArenaParameters::ROWS_COUNT/2),
+                                                QPoint(gameArenaParameters::COLUMNS_COUNT/2, gameArenaParameters::ROWS_COUNT/2)};
 };

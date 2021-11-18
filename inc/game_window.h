@@ -17,35 +17,35 @@ class GameWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit GameWindow(QWidget *parent = nullptr);
+    explicit GameWindow(QWidget* parent = nullptr);
     ~GameWindow();
 
-    void InitializeGameplayAreaScene();
+    void initializeGameplayAreaScene();
 
 private:
-    Ui::GameWindow* m_pUi;
-    QGraphicsScene m_Scene;
-    QTimer m_GameTickTimer;
-    Snake m_Snake;
-    Food m_Food;
+    Ui::GameWindow* ui_;
+    QGraphicsScene scene_;
+    QTimer gameTickTimer_;
+    Snake snake_;
+    Food food_;
 
-    void DrawAllSquares();
-    void DrawGameArena();
-    void StartGame();
-    void CheckSnakeCollisionWithWall();
-    void CheckSnakeCollisionWithFoodSquare();
-    void CheckSnakeCollisionWithItself();
-    void RedrawSnake();
-    void SetGameSpeedLevel(int speedLevel);
-    void ActivateSpeedBoost();
-    void DectivateSpeedBoost();
+    void drawAllSquares();
+    void drawGameArena();
+    void startGame();
+    void checkSnakeCollisionWithWall();
+    void checkSnakeCollisionWithFoodSquare();
+    void checkSnakeCollisionWithItself();
+    void redrawSnake();
+    void setGameSpeedLevel(int speedLevel);
+    void activateSpeedBoost();
+    void dectivateSpeedBoost();
 
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
 
-    void DialogRestartGame();
+    void dialogRestartGame();
 
 private slots:
-    void GameTick();
+    void gameTick();
     void on_m_SpeedHorizontalSlider_valueChanged(int value);
 };

@@ -21,6 +21,7 @@ SOURCES += \
     src/drawer.cpp
 
 HEADERS += \
+    common.h \
     inc/game_window.h \
     inc/snake.h \
     inc/food.h \

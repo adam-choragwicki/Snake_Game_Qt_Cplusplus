@@ -2,56 +2,56 @@
 #include "ui_game_window.h"
 #include "inc/drawer.h"
 
-GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::GameWindow)
+GameWindow::GameWindow(QWidget* parent) : QMainWindow(parent), ui_(new Ui::GameWindow)
 {
-    m_pUi->setupUi(this);
+    ui_->setupUi(this);
 
     setWindowTitle("Snake");
     setFocus(Qt::ActiveWindowFocusReason);
 
-    InitializeGameplayAreaScene();
+    initializeGameplayAreaScene();
 
-    Drawer::SetScene(&m_Scene);
+    Drawer::setScene(&scene_);
 
-    Drawer::DrawGameArena();
+    Drawer::drawGameArena();
 
-    m_Food.GenerateAndPlace();
+    food_.generateAndPlace();
 
-    Drawer::DrawSnake(m_Snake.GetPositions(), m_Snake.GetSnakeSquaresGraphicalRectItems());
+    Drawer::drawSnake(snake_.getPositions(), snake_.getSnakeSquaresGraphicalRectItems());
 
-    connect(&m_GameTickTimer, &QTimer::timeout, this, &GameWindow::GameTick);
+    connect(&gameTickTimer_, &QTimer::timeout, this, &GameWindow::gameTick);
 
-    StartGame();
+    startGame();
 }
 
 GameWindow::~GameWindow()
 {
-    delete m_pUi;
+    delete ui_;
 }
 
-void GameWindow::InitializeGameplayAreaScene()
+void GameWindow::initializeGameplayAreaScene()
 {
-    m_pUi->m_GraphicsView->setScene(&m_Scene);
-    m_Scene.setBackgroundBrush(QBrush(Qt::black));
+    ui_->graphicsView->setScene(&scene_);
+    scene_.setBackgroundBrush(QBrush(Qt::black));
 
-    const int sceneWidth = Drawer::COLUMNS_COUNT * Drawer::SQUARE_SIZE + 2 * Drawer::WALL_THICKNESS;
-    const int sceneHeight = Drawer::ROWS_COUNT * Drawer::SQUARE_SIZE + 2 * Drawer::WALL_THICKNESS;
+    const int sceneWidth = gameArenaParameters::COLUMNS_COUNT * gameArenaParameters::SQUARE_SIZE + 2 * gameArenaParameters::WALL_THICKNESS;
+    const int sceneHeight = gameArenaParameters::ROWS_COUNT * gameArenaParameters::SQUARE_SIZE + 2 * gameArenaParameters::WALL_THICKNESS;
 
-    m_Scene.setSceneRect(0,0, sceneWidth, sceneHeight);
+    scene_.setSceneRect(0, 0, sceneWidth, sceneHeight);
 }
 
-void GameWindow::StartGame()
+void GameWindow::startGame()
 {
-    m_Snake.Reset();
-    SetGameSpeedLevel(m_pUi->m_SpeedHorizontalSlider->value());
-    m_GameTickTimer.start();
+    snake_.reset();
+    setGameSpeedLevel(ui_->slider_Speed->value());
+    gameTickTimer_.start();
 }
 
-void GameWindow::keyPressEvent(QKeyEvent *event)
+void GameWindow::keyPressEvent(QKeyEvent* event)
 {
-    Snake::Direction currentDirection = m_Snake.GetDirection();
+    Snake::Direction currentDirection = snake_.getDirection();
 
-    int sliderValue = m_pUi->m_SpeedHorizontalSlider->value();
+    int sliderValue = ui_->slider_Speed->value();
 
     switch(event->key())
     {
@@ -59,7 +59,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Left:
         if(currentDirection != Snake::Direction::right)
         {
-            m_Snake.SetNextDirection(Snake::Direction::left);
+            snake_.setNextDirection(Snake::Direction::left);
         }
         break;
 
@@ -67,7 +67,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Up:
         if(currentDirection != Snake::Direction::down)
         {
-            m_Snake.SetNextDirection(Snake::Direction::up);
+            snake_.setNextDirection(Snake::Direction::up);
         }
         break;
 
@@ -75,7 +75,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Down:
         if(currentDirection != Snake::Direction::up)
         {
-            m_Snake.SetNextDirection(Snake::Direction::down);
+            snake_.setNextDirection(Snake::Direction::down);
         }
         break;
 
@@ -83,22 +83,22 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Right:
         if(currentDirection != Snake::Direction::left)
         {
-            m_Snake.SetNextDirection(Snake::Direction::right);
+            snake_.setNextDirection(Snake::Direction::right);
         }
         break;
 
     case Qt::Key_Plus:
         //Subtracting means increasing speed
-        m_pUi->m_SpeedHorizontalSlider->setValue(sliderValue - 1);
+        ui_->slider_Speed->setValue(sliderValue - 1);
         break;
 
     case Qt::Key_Minus:
         //Adding means decreasing speed
-        m_pUi->m_SpeedHorizontalSlider->setValue(sliderValue + 1);
+        ui_->slider_Speed->setValue(sliderValue + 1);
         break;
 
     case Qt::Key_Space:
-        ActivateSpeedBoost();
+        activateSpeedBoost();
         break;
 
     default:
@@ -106,41 +106,41 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void GameWindow::keyReleaseEvent(QKeyEvent *event)
+void GameWindow::keyReleaseEvent(QKeyEvent* event)
 {
     switch(event->key())
     {
     case Qt::Key_Space:
-        DectivateSpeedBoost();
+        dectivateSpeedBoost();
         break;
     }
 }
 
-void GameWindow::CheckSnakeCollisionWithFoodSquare()
+void GameWindow::checkSnakeCollisionWithFoodSquare()
 {
-    if(m_Snake.GetHeadPosition() == m_Food.GetPosition())
+    if(snake_.getHeadPosition() == food_.getPosition())
     {
-        Drawer::EraseFood(m_Food.GetFoodSquareGraphicalRectItem());
-        m_Food.GenerateAndPlace();
-        m_Snake.Grow();
+        Drawer::eraseFood(food_.getFoodSquareGraphicalRectItem());
+        food_.generateAndPlace();
+        snake_.grow();
     }
 }
 
-void GameWindow::CheckSnakeCollisionWithWall()
+void GameWindow::checkSnakeCollisionWithWall()
 {
     /*Check if snake hit a wall*/
-    if(m_Snake.GetHeadPosition().x() > Drawer::MAXIMUM_COLUMN ||
-            m_Snake.GetHeadPosition().x() < Drawer::MINIMUM_ROW_COLUMN ||
-            m_Snake.GetHeadPosition().y() > Drawer::MAXIMUM_ROW ||
-            m_Snake.GetHeadPosition().y() < Drawer::MINIMUM_ROW_COLUMN)
+    if(snake_.getHeadPosition().x() > gameArenaParameters::MAXIMUM_COLUMN ||
+            snake_.getHeadPosition().x() < gameArenaParameters::MINIMUM_ROW_COLUMN ||
+            snake_.getHeadPosition().y() > gameArenaParameters::MAXIMUM_ROW ||
+            snake_.getHeadPosition().y() < gameArenaParameters::MINIMUM_ROW_COLUMN)
     {
-        m_GameTickTimer.stop();
+        gameTickTimer_.stop();
 
-        DialogRestartGame();
+        dialogRestartGame();
     }
 }
 
-void GameWindow::DialogRestartGame()
+void GameWindow::dialogRestartGame()
 {
     int answer = QMessageBox::question(this,
                                        "Game over",
@@ -150,7 +150,7 @@ void GameWindow::DialogRestartGame()
 
     if(answer == QMessageBox::Ok)
     {
-        StartGame();
+        startGame();
     }
     else
     {
@@ -158,61 +158,61 @@ void GameWindow::DialogRestartGame()
     }
 }
 
-void GameWindow::CheckSnakeCollisionWithItself()
+void GameWindow::checkSnakeCollisionWithItself()
 {
     /*Check if snake hit itself*/
-    QVector<QPoint> snakePositions = m_Snake.GetPositions();
+    QVector<QPoint> snakePositions = snake_.getPositions();
 
     /*Remove head position from snake positions so it is not taken into account here*/
     snakePositions.removeFirst();
 
-    QPoint headPosition = m_Snake.GetHeadPosition();
+    QPoint headPosition = snake_.getHeadPosition();
 
     if(snakePositions.contains(headPosition))
     {
-        m_GameTickTimer.stop();
+        gameTickTimer_.stop();
 
-        DialogRestartGame();
+        dialogRestartGame();
     }
 }
 
-void GameWindow::RedrawSnake()
+void GameWindow::redrawSnake()
 {
-    Drawer::EraseSnake(m_Snake.GetSnakeSquaresGraphicalRectItems());
-    Drawer::DrawSnake(m_Snake.GetPositions(), m_Snake.GetSnakeSquaresGraphicalRectItems());
+    Drawer::eraseSnake(snake_.getSnakeSquaresGraphicalRectItems());
+    Drawer::drawSnake(snake_.getPositions(), snake_.getSnakeSquaresGraphicalRectItems());
 }
 
-void GameWindow::GameTick()
+void GameWindow::gameTick()
 {
-    m_Snake.Move();
-    m_Snake.SetDirection(m_Snake.GetNextDirection());
+    snake_.move();
+    snake_.setDirection(snake_.getNextDirection());
 
-    CheckSnakeCollisionWithWall();
-    CheckSnakeCollisionWithItself();
-    CheckSnakeCollisionWithFoodSquare();
+    checkSnakeCollisionWithWall();
+    checkSnakeCollisionWithItself();
+    checkSnakeCollisionWithFoodSquare();
 
-    RedrawSnake();
+    redrawSnake();
 }
 
 void GameWindow::on_m_SpeedHorizontalSlider_valueChanged(int value)
 {
-    SetGameSpeedLevel(value);
+    setGameSpeedLevel(value);
 }
 
-void GameWindow::SetGameSpeedLevel(int speedLevel)
+void GameWindow::setGameSpeedLevel(int speedLevel)
 {
     const int TIME_OFFSET = 20;
 
-    m_GameTickTimer.setInterval(TIME_OFFSET + speedLevel * 20);
+    gameTickTimer_.setInterval(TIME_OFFSET + speedLevel * 20);
 }
 
-void GameWindow::ActivateSpeedBoost()
+void GameWindow::activateSpeedBoost()
 {
     const int BOOST_VALUE = 20;
-    m_GameTickTimer.setInterval(BOOST_VALUE);
+    gameTickTimer_.setInterval(BOOST_VALUE);
 }
 
-void GameWindow::DectivateSpeedBoost()
+void GameWindow::dectivateSpeedBoost()
 {
-    SetGameSpeedLevel(m_pUi->m_SpeedHorizontalSlider->value());
+    setGameSpeedLevel(ui_->slider_Speed->value());
 }

@@ -10,14 +10,13 @@ class Food
 {
 public:
     Food();
-    void GenerateAndPlace();
-    void SetPosition(QPoint position){m_Position = position;}
-    QPoint& GetPosition() {return m_Position;}
-    QGraphicsRectItem* GetFoodSquareGraphicalRectItem(){return m_pFoodSquareGraphicalRectItem;}
+    void generateAndPlace();
+    void setPosition(QPoint position){position_ = position;}
+    QPoint& getPosition() {return position_;}
+    QGraphicsRectItem* getFoodSquareGraphicalRectItem(){return foodSquareGraphicalRectItem_;}
 
 private:
-    QRandomGenerator m_RandomGenerator;
-    QPoint m_Position;
-
-    QGraphicsRectItem* m_pFoodSquareGraphicalRectItem;
+    QRandomGenerator randomGenerator_;
+    QPoint position_;
+    QGraphicsRectItem* foodSquareGraphicalRectItem_;
 };
