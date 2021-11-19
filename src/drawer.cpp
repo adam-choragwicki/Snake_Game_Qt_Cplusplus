@@ -1,5 +1,5 @@
-#include "inc/drawer.h"
-#include "inc/common.h"
+#include "drawer.h"
+#include "common.h"
 #include <QDebug>
 
 QGraphicsScene* Drawer::scene_ = nullptr;

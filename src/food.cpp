@@ -1,6 +1,6 @@
-#include "inc/food.h"
-#include "inc/drawer.h"
-#include "inc/common.h"
+#include "food.h"
+#include "drawer.h"
+#include "common.h"
 
 Food::Food()
 {
