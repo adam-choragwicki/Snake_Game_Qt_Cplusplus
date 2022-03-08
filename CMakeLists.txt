@@ -27,12 +27,17 @@ set(SOURCE_FILES
     ${INCLUDES_DIR}/snake.h ${SOURCES_DIR}/snake.cpp
     ${INCLUDES_DIR}/drawer.h ${SOURCES_DIR}/drawer.cpp)
 
-add_executable(Snake WIN32 ${SOURCE_FILES})
-target_include_directories(Snake PRIVATE ${INCLUDES_DIR})
-target_link_libraries(Snake PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+add_library(libSnake ${SOURCE_FILES})
+target_include_directories(libSnake PUBLIC ${INCLUDES_DIR})
+target_link_libraries(libSnake Qt${QT_VERSION_MAJOR}::Widgets)
+
+add_executable(Snake WIN32 ${SOURCES_DIR}/main.cpp)
+target_link_libraries(Snake PRIVATE libSnake)
 
 if(WIN32)
     set_target_properties(Snake PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_ROOT}/executable_windows)
 elseif(UNIX)
     set_target_properties(Snake PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_ROOT}/executable_linux)
 endif()
+
+add_subdirectory(tests)
