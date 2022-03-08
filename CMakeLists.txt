@@ -3,34 +3,36 @@ cmake_minimum_required(VERSION 3.10)
 project(Snake LANGUAGES CXX)
 
 set(QT_VERSION_MAJOR 6)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 20)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(PROJECT_DIR ${CMAKE_SOURCE_DIR})
+set(PROJECT_ROOT ${CMAKE_SOURCE_DIR})
 
-set(MAIN_PROJECT_INCLUDES_PATH ${PROJECT_DIR}/inc)
-set(MAIN_PROJECT_SOURCES_PATH ${PROJECT_DIR}/src)
-set(MAIN_PROJECT_UI_FORMS_PATH ${PROJECT_DIR}/ui_forms)
-set(RESOURCE_FILES_PATH ${PROJECT_DIR}/resource_files)
+set(INCLUDES_DIR ${PROJECT_ROOT}/inc)
+set(SOURCES_DIR ${PROJECT_ROOT}/src)
+set(UI_FORMS_DIR ${PROJECT_ROOT}/ui_forms)
 
-set(CMAKE_AUTOUIC_SEARCH_PATHS ${MAIN_PROJECT_UI_FORMS_PATH})
+set(CMAKE_AUTOUIC_SEARCH_PATHS ${UI_FORMS_DIR})
 
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
-set(MAIN_PROJECT_SOURCES
-    ${MAIN_PROJECT_SOURCES_PATH}/main.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/common.h
-    ${MAIN_PROJECT_INCLUDES_PATH}/game_window.h ${MAIN_PROJECT_SOURCES_PATH}/game_window.cpp ${MAIN_PROJECT_UI_FORMS_PATH}/game_window.ui
-    ${MAIN_PROJECT_INCLUDES_PATH}/food.h ${MAIN_PROJECT_SOURCES_PATH}/food.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/snake.h ${MAIN_PROJECT_SOURCES_PATH}/snake.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/drawer.h ${MAIN_PROJECT_SOURCES_PATH}/drawer.cpp
-)
+set(SOURCE_FILES
+    ${SOURCES_DIR}/main.cpp
+    ${INCLUDES_DIR}/common.h
+    ${INCLUDES_DIR}/game_window.h ${SOURCES_DIR}/game_window.cpp ${UI_FORMS_DIR}/game_window.ui
+    ${INCLUDES_DIR}/food.h ${SOURCES_DIR}/food.cpp
+    ${INCLUDES_DIR}/snake.h ${SOURCES_DIR}/snake.cpp
+    ${INCLUDES_DIR}/drawer.h ${SOURCES_DIR}/drawer.cpp)
 
-add_executable(${PROJECT_NAME} WIN32 ${MAIN_PROJECT_SOURCES})
-target_include_directories(${PROJECT_NAME} PRIVATE ${MAIN_PROJECT_INCLUDES_PATH})
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+add_executable(Snake WIN32 ${SOURCE_FILES})
+target_include_directories(Snake PRIVATE ${INCLUDES_DIR})
+target_link_libraries(Snake PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/executable_windows)
+if(WIN32)
+    set_target_properties(Snake PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_ROOT}/executable_windows)
+elseif(UNIX)
+    set_target_properties(Snake PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_ROOT}/executable_linux)
+endif()
