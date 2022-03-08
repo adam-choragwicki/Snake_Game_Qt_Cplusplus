@@ -1,20 +1,23 @@
 #pragma once
 
-namespace gameArenaParameters{
-const int SQUARE_SIZE = 30;
-const int ROWS_COUNT = 25;
-const int COLUMNS_COUNT = 50;
+namespace GameArenaParameters
+{
+    const int snakeSegmentSize = 30;
+    const int foodSize = 20;
+    const int foodOffset = 5;
+    const int rowsCount = 25;
+    const int columnCount = 50;
 
 /*Do not modify beyond this point*/
-const int WALL_THICKNESS = SQUARE_SIZE;
-const int MINIMUM_ROW_COLUMN = 0;
-const int MAXIMUM_ROW = ROWS_COUNT - 1;
-const int MAXIMUM_COLUMN = COLUMNS_COUNT - 1;
+    const int wallThickness = snakeSegmentSize;
+    const int minimumRowColumn = 0;
+    const int maximumRow = rowsCount - 1;
+    const int maxim = columnCount - 1;
 
-const int LEFT_BORDER_X = SQUARE_SIZE/2;
-const int RIGHT_BORDER_X = COLUMNS_COUNT * SQUARE_SIZE + 2 * WALL_THICKNESS;
-const int RIGHT_BORDER_X_OFFSET = -SQUARE_SIZE/2;
-const int TOP_Y = SQUARE_SIZE/2;
-const int BOTTOM_Y = ROWS_COUNT * SQUARE_SIZE + 2 * WALL_THICKNESS;
-const int BOTTOM_Y_OFFSET = -SQUARE_SIZE/2;
+    const int leftBorderX = snakeSegmentSize / 2;
+    const int rightBorderX = columnCount * snakeSegmentSize + 2 * wallThickness;
+    const int rightBorderXOffset = -snakeSegmentSize / 2;
+    const int topY = snakeSegmentSize / 2;
+    const int bottomY = rowsCount * snakeSegmentSize + 2 * wallThickness;
+    const int bottomYOffset = -snakeSegmentSize / 2;
 }

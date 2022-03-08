@@ -3,8 +3,7 @@
 #include <QObject>
 #include <QRandomGenerator>
 #include <QPoint>
-#include <QDebug>
-#include <QGraphicsRectItem>
+#include <QGraphicsEllipseItem>
 
 class Food
 {
@@ -12,10 +11,10 @@ public:
     Food();
     void generateAndPlace();
     QPoint& getPosition() {return position_;}
-    QGraphicsRectItem* getFoodSquareGraphicalRectItem(){return foodSquareGraphicalRectItem_;}
+    QGraphicsEllipseItem* getFoodSquareGraphicalEllipseItem(){return foodSquareGraphicalEllipseItem_;}
 
 private:
     QRandomGenerator randomGenerator_;
     QPoint position_;
-    QGraphicsRectItem* foodSquareGraphicalRectItem_;
+    QGraphicsEllipseItem* foodSquareGraphicalEllipseItem_;
 };

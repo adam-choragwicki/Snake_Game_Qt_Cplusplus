@@ -44,6 +44,6 @@ private:
     void dialogRestartGame();
 
 private slots:
-    void gameTick();
-    void on_m_SpeedHorizontalSlider_valueChanged(int value);
+    void gameTickSlot();
+    void speedSliderValueChangedSlot(int value);
 };

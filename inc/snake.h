@@ -6,7 +6,6 @@
 #include <QObject>
 #include <QVector>
 #include <QPoint>
-#include <QDebug>
 #include <QGraphicsRectItem>
 
 class Snake
@@ -45,7 +44,7 @@ private:
     QVector<QPoint> positions_;
     QVector<QGraphicsRectItem*> snakeSquaresGraphicalRectItems_;
 
-    const QVector<QPoint> startingPositions_ = {QPoint(gameArenaParameters::COLUMNS_COUNT/2 + 2, gameArenaParameters::ROWS_COUNT/2),
-                                                QPoint(gameArenaParameters::COLUMNS_COUNT/2 + 1, gameArenaParameters::ROWS_COUNT/2),
-                                                QPoint(gameArenaParameters::COLUMNS_COUNT/2, gameArenaParameters::ROWS_COUNT/2)};
+    const QVector<QPoint> startingPositions_ = {QPoint(GameArenaParameters::columnCount / 2 + 2, GameArenaParameters::rowsCount / 2),
+                                                QPoint(GameArenaParameters::columnCount / 2 + 1, GameArenaParameters::rowsCount / 2),
+                                                QPoint(GameArenaParameters::columnCount / 2, GameArenaParameters::rowsCount / 2)};
 };

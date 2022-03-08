@@ -1,8 +1,5 @@
 #include "drawer.h"
 #include "common.h"
-#include <QDebug>
-
-QGraphicsScene* Drawer::scene_ = nullptr;
 
 void Drawer::drawSnake(const QVector<QPoint>& snakeSquarePositions, QVector<QGraphicsRectItem*>& snakeSquaresGraphicalRectItems)
 {
@@ -12,10 +9,10 @@ void Drawer::drawSnake(const QVector<QPoint>& snakeSquarePositions, QVector<QGra
 
     for(auto& snakeSquarePosition : snakeSquarePositions)
     {
-        snakeSquaresGraphicalRectItems.append(scene_->addRect(snakeSquarePosition.x() * gameArenaParameters::SQUARE_SIZE  + gameArenaParameters::SQUARE_SIZE,
-                                                              snakeSquarePosition.y() * gameArenaParameters::SQUARE_SIZE  + gameArenaParameters::SQUARE_SIZE,
-                                                              gameArenaParameters::SQUARE_SIZE,
-                                                              gameArenaParameters::SQUARE_SIZE,
+        snakeSquaresGraphicalRectItems.append(scene_->addRect(snakeSquarePosition.x() * GameArenaParameters::snakeSegmentSize + GameArenaParameters::snakeSegmentSize,
+                                                              snakeSquarePosition.y() * GameArenaParameters::snakeSegmentSize + GameArenaParameters::snakeSegmentSize,
+                                                              GameArenaParameters::snakeSegmentSize,
+                                                              GameArenaParameters::snakeSegmentSize,
                                                               redPen,
                                                               greenBrush));
     }
@@ -35,24 +32,24 @@ void Drawer::eraseSnake(QVector<QGraphicsRectItem*>& snakeSquaresGraphicalRectIt
     snakeSquaresGraphicalRectItems.squeeze();
 }
 
-QGraphicsRectItem* Drawer::drawFood(QPoint foodPosition)
+QGraphicsEllipseItem* Drawer::drawFood(const QPoint& foodPosition)
 {
     QPen redPen(Qt::red);
     QBrush redBrush(Qt::red);
 
-    QGraphicsRectItem* pFoodSquareGraphicalRectItem = scene_->addRect(foodPosition.x() * gameArenaParameters::SQUARE_SIZE + gameArenaParameters::SQUARE_SIZE,
-                                                                      foodPosition.y() * gameArenaParameters::SQUARE_SIZE + gameArenaParameters::SQUARE_SIZE,
-                                                                      gameArenaParameters::SQUARE_SIZE,
-                                                                      gameArenaParameters::SQUARE_SIZE,
-                                                                      redPen,
-                                                                      redBrush);
+    QGraphicsEllipseItem* pFoodGraphicalEllipseItem = scene_->addEllipse(foodPosition.x() * GameArenaParameters::snakeSegmentSize + GameArenaParameters::snakeSegmentSize + GameArenaParameters::foodOffset,
+                                                                         foodPosition.y() * GameArenaParameters::snakeSegmentSize + GameArenaParameters::snakeSegmentSize + GameArenaParameters::foodOffset,
+                                                                         GameArenaParameters::foodSize,
+                                                                         GameArenaParameters::foodSize,
+                                                                         redPen,
+                                                                         redBrush);
 
-    return pFoodSquareGraphicalRectItem;
+    return pFoodGraphicalEllipseItem;
 }
 
-void Drawer::eraseFood(QGraphicsRectItem* pFoodSquareGraphicalRectItem)
+void Drawer::eraseFood(QGraphicsEllipseItem* pFoodSquareGraphicalEllipseItem)
 {
-    scene_->removeItem(pFoodSquareGraphicalRectItem);
+    scene_->removeItem(pFoodSquareGraphicalEllipseItem);
 }
 
 [[maybe_unused]] void Drawer::drawAllSquares()
@@ -60,28 +57,28 @@ void Drawer::eraseFood(QGraphicsRectItem* pFoodSquareGraphicalRectItem)
     QBrush redBrush(Qt::red);
     QBrush greenBrush(Qt::green);
 
-    for(int column = 0 ; column < gameArenaParameters::COLUMNS_COUNT; column++)
+    for(int column = 0 ; column < GameArenaParameters::columnCount; column++)
     {
-        for(int row = 0; row < gameArenaParameters::ROWS_COUNT; row++)
+        for(int row = 0; row < GameArenaParameters::rowsCount; row++)
         {
             /*Even columns*/
             if(column % 2 == 0)
             {
                 if(row % 2 == 0)
                 {
-                    scene_->addRect(column * gameArenaParameters::SQUARE_SIZE + gameArenaParameters::SQUARE_SIZE,
-                                    row * gameArenaParameters::SQUARE_SIZE + gameArenaParameters::SQUARE_SIZE,
-                                    gameArenaParameters::SQUARE_SIZE,
-                                    gameArenaParameters::SQUARE_SIZE,
+                    scene_->addRect(column * GameArenaParameters::snakeSegmentSize + GameArenaParameters::snakeSegmentSize,
+                                    row * GameArenaParameters::snakeSegmentSize + GameArenaParameters::snakeSegmentSize,
+                                    GameArenaParameters::snakeSegmentSize,
+                                    GameArenaParameters::snakeSegmentSize,
                                     Qt::NoPen,
                                     redBrush);
                 }
                 else
                 {
-                    scene_->addRect(column * gameArenaParameters::SQUARE_SIZE + gameArenaParameters::SQUARE_SIZE,
-                                    row * gameArenaParameters::SQUARE_SIZE + gameArenaParameters::SQUARE_SIZE,
-                                    gameArenaParameters::SQUARE_SIZE,
-                                    gameArenaParameters::SQUARE_SIZE,
+                    scene_->addRect(column * GameArenaParameters::snakeSegmentSize + GameArenaParameters::snakeSegmentSize,
+                                    row * GameArenaParameters::snakeSegmentSize + GameArenaParameters::snakeSegmentSize,
+                                    GameArenaParameters::snakeSegmentSize,
+                                    GameArenaParameters::snakeSegmentSize,
                                     Qt::NoPen,
                                     greenBrush);
                 }
@@ -91,19 +88,19 @@ void Drawer::eraseFood(QGraphicsRectItem* pFoodSquareGraphicalRectItem)
             {
                 if(row % 2 == 0)
                 {
-                    scene_->addRect(column * gameArenaParameters::SQUARE_SIZE + gameArenaParameters::SQUARE_SIZE,
-                                    row * gameArenaParameters::SQUARE_SIZE + gameArenaParameters::SQUARE_SIZE,
-                                    gameArenaParameters::SQUARE_SIZE,
-                                    gameArenaParameters::SQUARE_SIZE,
+                    scene_->addRect(column * GameArenaParameters::snakeSegmentSize + GameArenaParameters::snakeSegmentSize,
+                                    row * GameArenaParameters::snakeSegmentSize + GameArenaParameters::snakeSegmentSize,
+                                    GameArenaParameters::snakeSegmentSize,
+                                    GameArenaParameters::snakeSegmentSize,
                                     Qt::NoPen,
                                     greenBrush);
                 }
                 else
                 {
-                    scene_->addRect(column * gameArenaParameters::SQUARE_SIZE + gameArenaParameters::SQUARE_SIZE,
-                                    row * gameArenaParameters::SQUARE_SIZE + gameArenaParameters::SQUARE_SIZE,
-                                    gameArenaParameters::SQUARE_SIZE,
-                                    gameArenaParameters::SQUARE_SIZE,
+                    scene_->addRect(column * GameArenaParameters::snakeSegmentSize + GameArenaParameters::snakeSegmentSize,
+                                    row * GameArenaParameters::snakeSegmentSize + GameArenaParameters::snakeSegmentSize,
+                                    GameArenaParameters::snakeSegmentSize,
+                                    GameArenaParameters::snakeSegmentSize,
                                     Qt::NoPen,
                                     redBrush);
                 }
@@ -114,30 +111,30 @@ void Drawer::eraseFood(QGraphicsRectItem* pFoodSquareGraphicalRectItem)
 
 void Drawer::drawGameArena()
 {
-    QPen pen(Qt::white, gameArenaParameters::SQUARE_SIZE);
+    QPen pen(Qt::white, GameArenaParameters::snakeSegmentSize);
 
     /*Top wall*/
-    scene_->addLine(gameArenaParameters::LEFT_BORDER_X,
-                    gameArenaParameters::TOP_Y,
-                    gameArenaParameters::RIGHT_BORDER_X + gameArenaParameters::RIGHT_BORDER_X_OFFSET,
-                    gameArenaParameters::TOP_Y,
+    scene_->addLine(GameArenaParameters::leftBorderX,
+                    GameArenaParameters::topY,
+                    GameArenaParameters::rightBorderX + GameArenaParameters::rightBorderXOffset,
+                    GameArenaParameters::topY,
                     pen);
     /*Left wall*/
-    scene_->addLine(gameArenaParameters::LEFT_BORDER_X,
-                    gameArenaParameters::TOP_Y,
-                    gameArenaParameters::LEFT_BORDER_X,
-                    gameArenaParameters::BOTTOM_Y + gameArenaParameters::BOTTOM_Y_OFFSET,
+    scene_->addLine(GameArenaParameters::leftBorderX,
+                    GameArenaParameters::topY,
+                    GameArenaParameters::leftBorderX,
+                    GameArenaParameters::bottomY + GameArenaParameters::bottomYOffset,
                     pen);
     /*Bottom wall*/
-    scene_->addLine(gameArenaParameters::LEFT_BORDER_X,
-                    gameArenaParameters::BOTTOM_Y + gameArenaParameters::BOTTOM_Y_OFFSET,
-                    gameArenaParameters::RIGHT_BORDER_X + gameArenaParameters::RIGHT_BORDER_X_OFFSET,
-                    gameArenaParameters::BOTTOM_Y + gameArenaParameters::BOTTOM_Y_OFFSET,
+    scene_->addLine(GameArenaParameters::leftBorderX,
+                    GameArenaParameters::bottomY + GameArenaParameters::bottomYOffset,
+                    GameArenaParameters::rightBorderX + GameArenaParameters::rightBorderXOffset,
+                    GameArenaParameters::bottomY + GameArenaParameters::bottomYOffset,
                     pen);
     /*Right wall*/
-    scene_->addLine(gameArenaParameters::RIGHT_BORDER_X + gameArenaParameters::RIGHT_BORDER_X_OFFSET,
-                    gameArenaParameters::TOP_Y,
-                    gameArenaParameters::RIGHT_BORDER_X + gameArenaParameters::RIGHT_BORDER_X_OFFSET,
-                    gameArenaParameters::BOTTOM_Y + gameArenaParameters::BOTTOM_Y_OFFSET,
+    scene_->addLine(GameArenaParameters::rightBorderX + GameArenaParameters::rightBorderXOffset,
+                    GameArenaParameters::topY,
+                    GameArenaParameters::rightBorderX + GameArenaParameters::rightBorderXOffset,
+                    GameArenaParameters::bottomY + GameArenaParameters::bottomYOffset,
                     pen);
 }

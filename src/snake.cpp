@@ -77,9 +77,6 @@ void Snake::reset()
     positions_.squeeze();
 
     positions_ = startingPositions_;
-
-    qDebug() << "Starting positions: " << startingPositions_;
-
     headPosition_ = positions_.front();
 
     setDirection(Direction::right);

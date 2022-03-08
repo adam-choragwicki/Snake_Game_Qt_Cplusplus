@@ -4,18 +4,18 @@
 
 Food::Food()
 {
-    foodSquareGraphicalRectItem_ = nullptr;
+    foodSquareGraphicalEllipseItem_ = nullptr;
 }
 
 void Food::generateAndPlace()
 {
-    foodSquareGraphicalRectItem_ = nullptr;
+    foodSquareGraphicalEllipseItem_ = nullptr;
 
-    int positionX = randomGenerator_.bounded(gameArenaParameters::MINIMUM_ROW_COLUMN, gameArenaParameters::MAXIMUM_COLUMN);
-    int positionY = randomGenerator_.bounded(gameArenaParameters::MINIMUM_ROW_COLUMN, gameArenaParameters::MAXIMUM_ROW);
+    int positionX = randomGenerator_.bounded(GameArenaParameters::minimumRowColumn, GameArenaParameters::maxim);
+    int positionY = randomGenerator_.bounded(GameArenaParameters::minimumRowColumn, GameArenaParameters::maximumRow);
 
     position_.setX(positionX);
     position_.setY(positionY);
 
-    foodSquareGraphicalRectItem_ = Drawer::drawFood(position_);
+    foodSquareGraphicalEllipseItem_ = Drawer::drawFood(position_);
 }

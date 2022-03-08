@@ -18,11 +18,11 @@ public:
     static void setScene(QGraphicsScene* scene) {scene_ = scene;}
     static void drawSnake(const QVector<QPoint>& snakeSquarePositions, QVector<QGraphicsRectItem*>& snakeSquaresGraphicalRectItems);
     static void eraseSnake(QVector<QGraphicsRectItem*>& snakeSquaresGraphicalRectItems);
-    static QGraphicsRectItem* drawFood(QPoint foodPosition);
-    static void eraseFood(QGraphicsRectItem* pFoodSquareGraphicalRectItem);
+    static QGraphicsEllipseItem* drawFood(const QPoint& foodPosition);
+    static void eraseFood(QGraphicsEllipseItem* pFoodSquareGraphicalEllipseItem);
     [[maybe_unused]] static void drawAllSquares();
     static void drawGameArena();
 
 private:
-    static QGraphicsScene* scene_;
+    inline static QGraphicsScene* scene_ = nullptr;
 };
