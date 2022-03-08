@@ -111,7 +111,7 @@ void GameWindow::keyReleaseEvent(QKeyEvent* event)
     switch(event->key())
     {
     case Qt::Key_Space:
-        dectivateSpeedBoost();
+        deactivateSpeedBoost();
         break;
     }
 }
@@ -163,7 +163,7 @@ void GameWindow::checkSnakeCollisionWithItself()
     /*Check if snake hit itself*/
     QVector<QPoint> snakePositions = snake_.getPositions();
 
-    /*Remove head position from snake positions so it is not taken into account here*/
+    /*Remove head position from snake positions, so it is not taken into account here*/
     snakePositions.removeFirst();
 
     QPoint headPosition = snake_.getHeadPosition();
@@ -212,7 +212,7 @@ void GameWindow::activateSpeedBoost()
     gameTickTimer_.setInterval(BOOST_VALUE);
 }
 
-void GameWindow::dectivateSpeedBoost()
+void GameWindow::deactivateSpeedBoost()
 {
     setGameSpeedLevel(ui_->slider_Speed->value());
 }

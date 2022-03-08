@@ -17,14 +17,12 @@ public:
 
     Snake();
     void move();
-    bool isMovePossible();
     void grow();
     void reset();
 
     void setHeadPosition(QPoint headPosition) {headPosition_ = headPosition;}
     void setDirection(Direction direction) {direction_ = direction;}
     void setNextDirection(Direction nextDirection) {nextDirection_ = nextDirection;}
-    void setSnakeSquaresGraphicalRectItems(const QVector<QGraphicsRectItem*>& snakeSquaresGraphicalRectItems) {snakeSquaresGraphicalRectItems_ = snakeSquaresGraphicalRectItems;}
 
     QVector<QPoint>& getPositions() {return positions_;}
     QPoint& getHeadPosition() {return headPosition_;}

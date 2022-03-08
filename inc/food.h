@@ -11,7 +11,6 @@ class Food
 public:
     Food();
     void generateAndPlace();
-    void setPosition(QPoint position){position_ = position;}
     QPoint& getPosition() {return position_;}
     QGraphicsRectItem* getFoodSquareGraphicalRectItem(){return foodSquareGraphicalRectItem_;}
 

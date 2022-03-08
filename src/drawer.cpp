@@ -55,7 +55,7 @@ void Drawer::eraseFood(QGraphicsRectItem* pFoodSquareGraphicalRectItem)
     scene_->removeItem(pFoodSquareGraphicalRectItem);
 }
 
-void Drawer::drawAllSquares()
+[[maybe_unused]] void Drawer::drawAllSquares()
 {
     QBrush redBrush(Qt::red);
     QBrush greenBrush(Qt::green);

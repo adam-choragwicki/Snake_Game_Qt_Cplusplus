@@ -18,7 +18,7 @@ class GameWindow : public QMainWindow
 
 public:
     explicit GameWindow(QWidget* parent = nullptr);
-    ~GameWindow();
+    ~GameWindow() override;
 
     void initializeGameplayAreaScene();
 
@@ -29,8 +29,6 @@ private:
     Snake snake_;
     Food food_;
 
-    void drawAllSquares();
-    void drawGameArena();
     void startGame();
     void checkSnakeCollisionWithWall();
     void checkSnakeCollisionWithFoodSquare();
@@ -38,7 +36,7 @@ private:
     void redrawSnake();
     void setGameSpeedLevel(int speedLevel);
     void activateSpeedBoost();
-    void dectivateSpeedBoost();
+    void deactivateSpeedBoost();
 
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
