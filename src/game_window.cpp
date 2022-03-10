@@ -13,17 +13,11 @@ GameWindow::GameWindow(GameEngine& gameEngine, QWidget* parent) :
     setFocus(Qt::ActiveWindowFocusReason);
 
     initializeGameplayAreaScene();
-
-    Drawer::setScene(&scene_);
+    gameEngine_.getSpeedManager().connectSlider(*ui_->slider_Speed);
 
     Drawer::drawGameArena();
 
-    gameEngine_.getSpeedManager().connectSlider(*ui_->slider_Speed);
-
-    Drawer::drawSnake(gameEngine_.getSnake().getPositions(), gameEngine.getSnake().getSnakeSquaresGraphicalRectItems());
-
     connect(ui_->slider_Speed, &QSlider::valueChanged, this, &GameWindow::speedSliderValueChangedSlot);
-    connect(&gameEngine_, &GameEngine::redrawSnakeSignal, this, &GameWindow::redrawSnakeSlot);
     connect(&gameEngine_, &GameEngine::dialogRestartGameSignal, this, &GameWindow::dialogRestartGameSlot);
 
     gameEngine_.startGame();
@@ -43,6 +37,8 @@ void GameWindow::initializeGameplayAreaScene()
     const int sceneHeight = GameArenaParameters::rowsCount * GameArenaParameters::snakeSegmentSize + 2 * GameArenaParameters::wallThickness;
 
     scene_.setSceneRect(0, 0, sceneWidth, sceneHeight);
+
+    Drawer::setScene(&scene_);
 }
 
 void GameWindow::keyPressEvent(QKeyEvent* event)
@@ -85,11 +81,9 @@ void GameWindow::keyPressEvent(QKeyEvent* event)
 
 void GameWindow::keyReleaseEvent(QKeyEvent* event)
 {
-    switch(event->key())
+    if(event->key() == Qt::Key_Space)
     {
-        case Qt::Key_Space:
-            gameEngine_.deactivateSpeedBoost();
-            break;
+        gameEngine_.deactivateSpeedBoost();
     }
 }
 
@@ -109,12 +103,6 @@ void GameWindow::dialogRestartGameSlot()
     {
         exit(0);
     }
-}
-
-void GameWindow::redrawSnakeSlot()
-{
-    Drawer::eraseSnake(gameEngine_.getSnake().getSnakeSquaresGraphicalRectItems());
-    Drawer::drawSnake(gameEngine_.getSnake().getPositions(), gameEngine_.getSnake().getSnakeSquaresGraphicalRectItems());
 }
 
 void GameWindow::speedSliderValueChangedSlot()

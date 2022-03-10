@@ -2,33 +2,21 @@
 
 #include "snake.h"
 #include "food.h"
-#include "speed_manager.h"
+#include "game_speed_manager.h"
+#include "common.h"
 
 #include <QTimer>
-
-enum class Key
-{
-    left,
-    right,
-    up,
-    down,
-    plus,
-    minus,
-    space
-};
 
 class GameEngine : public QObject
 {
 Q_OBJECT
 
 signals:
-    void redrawSnakeSignal();
     void dialogRestartGameSignal();
 
 public:
     GameEngine();
     void processKeyPress(const Key& key);
-    Snake& getSnake() {return snake_;}
     void startGame();
 
     SpeedManager& getSpeedManager() {return speedManager_;}

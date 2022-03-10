@@ -2,24 +2,24 @@
 
 namespace GameArenaParameters
 {
-    const int snakeSegmentSize = 30;
     const int foodSize = 20;
     const int foodOffset = 5;
     const int rowsCount = 25;
     const int columnCount = 50;
 
-/*Do not modify beyond this point*/
-    const int wallThickness = snakeSegmentSize;
+    const int basicSquareSize = 30;
+    const int snakeSegmentSize = basicSquareSize;
+    const int wallThickness = basicSquareSize;
     const int minimumRowColumn = 0;
     const int maximumRow = rowsCount - 1;
     const int maximumColumn = columnCount - 1;
 
-    const int leftBorderX = snakeSegmentSize / 2;
-    const int rightBorderX = columnCount * snakeSegmentSize + 2 * wallThickness;
-    const int rightBorderXOffset = -snakeSegmentSize / 2;
-    const int topY = snakeSegmentSize / 2;
-    const int bottomY = rowsCount * snakeSegmentSize + 2 * wallThickness;
-    const int bottomYOffset = -snakeSegmentSize / 2;
+    const int leftBorderX = basicSquareSize / 2;
+    const int rightBorderX = columnCount * basicSquareSize + 2 * wallThickness;
+    const int rightBorderXOffset = -basicSquareSize / 2;
+    const int topY = basicSquareSize / 2;
+    const int bottomY = rowsCount * basicSquareSize + 2 * wallThickness;
+    const int bottomYOffset = -basicSquareSize / 2;
 }
 
 enum class Direction
@@ -28,4 +28,15 @@ enum class Direction
     up = 2,
     down = 3,
     right = 4
+};
+
+enum class Key
+{
+    left,
+    right,
+    up,
+    down,
+    plus,
+    minus,
+    space
 };

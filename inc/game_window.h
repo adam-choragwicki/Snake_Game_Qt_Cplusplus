@@ -1,12 +1,12 @@
 #pragma once
 
 #include "game_engine.h"
-#include "snake.h"
 #include "food.h"
 
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QKeyEvent>
+#include <QGraphicsScene>
 
 namespace Ui {
 class GameWindow;
@@ -26,8 +26,6 @@ private:
     Ui::GameWindow* ui_;
     GameEngine& gameEngine_;
     QGraphicsScene scene_;
-
-    void redrawSnakeSlot();
 
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;

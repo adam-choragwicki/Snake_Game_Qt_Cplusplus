@@ -1,6 +1,5 @@
 #pragma once
 
-#include "drawer.h"
 #include "common.h"
 
 #include <QObject>
@@ -25,6 +24,9 @@ public:
     Direction& getDirection() {return direction_;}
     Direction& getNextDirection() {return nextDirection_;}
     QVector<QGraphicsRectItem*>& getSnakeSquaresGraphicalRectItems() {return snakeSquaresGraphicalRectItems_;}
+
+    inline static const QColor headColor = Qt::yellow;
+    inline static const QColor bodyColor = Qt::green;
 
 private:
     Direction direction_;

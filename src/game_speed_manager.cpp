@@ -1,4 +1,4 @@
-#include "speed_manager.h"
+#include "game_speed_manager.h"
 
 void SpeedManager::connectSlider(QSlider& slider)
 {
@@ -44,6 +44,11 @@ void SpeedManager::setGameSpeedLevel()
     const int speedLevel = slider_->value();
 
     gameTickTimer_.setInterval(timeOffset + speedLevel * 20);
+}
+
+void SpeedManager::startGame()
+{
+    gameTickTimer_.start();
 }
 
 void SpeedManager::stopGame()

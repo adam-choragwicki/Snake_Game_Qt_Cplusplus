@@ -2,20 +2,20 @@
 #include "drawer.h"
 #include "common.h"
 
-Food::Food()
+#include <QRandomGenerator>
+
+void Food::generate()
 {
-    foodSquareGraphicalEllipseItem_ = nullptr;
-}
+    if(foodSquareGraphicalEllipseItem_ == nullptr)
+    {
+        int positionX = QRandomGenerator::global()->bounded(GameArenaParameters::minimumRowColumn, GameArenaParameters::maximumColumn);
+        int positionY = QRandomGenerator::global()->bounded(GameArenaParameters::minimumRowColumn, GameArenaParameters::maximumRow);
 
-void Food::generateAndPlace()
-{
-    foodSquareGraphicalEllipseItem_ = nullptr;
-
-    int positionX = randomGenerator_.bounded(GameArenaParameters::minimumRowColumn, GameArenaParameters::maximumColumn);
-    int positionY = randomGenerator_.bounded(GameArenaParameters::minimumRowColumn, GameArenaParameters::maximumRow);
-
-    position_.setX(positionX);
-    position_.setY(positionY);
-
-    foodSquareGraphicalEllipseItem_ = Drawer::drawFood(position_);
+        position_.setX(positionX);
+        position_.setY(positionY);
+    }
+    else
+    {
+        throw std::runtime_error("Another food item already exists");
+    }
 }

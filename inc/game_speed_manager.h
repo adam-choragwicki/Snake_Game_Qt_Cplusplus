@@ -11,16 +11,16 @@ public:
     void connectSlider(QSlider& slider);
     void processIncreaseSpeed();
     void processDecreaseSpeed();
-
     void activateSpeedBoost();
     void deactivateSpeedBoost();
     void setGameSpeedLevel();
+    void startGame();
     void stopGame();
     void resetSpeed();
     QTimer& getGameTickTimer();
 
 private:
-    QSlider* slider_ = nullptr;
+    QSlider* slider_ {};
     QTimer gameTickTimer_;
     const int defaultSpeedLevel = 5;
 };

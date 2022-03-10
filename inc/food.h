@@ -1,20 +1,21 @@
 #pragma once
 
 #include <QObject>
-#include <QRandomGenerator>
 #include <QPoint>
 #include <QGraphicsEllipseItem>
 
 class Food
 {
 public:
-    Food();
-    void generateAndPlace();
-    QPoint& getPosition() {return position_;}
-    QGraphicsEllipseItem* getFoodSquareGraphicalEllipseItem(){return foodSquareGraphicalEllipseItem_;}
+    Food() = default;
+
+    void generate();
+    [[nodiscard]] const QPoint& getPosition() const {return position_;}
+    [[nodiscard]] QGraphicsEllipseItem*& getFoodGraphicalEllipseItem(){return foodSquareGraphicalEllipseItem_;}
+
+    inline static const QColor color = Qt::red;
 
 private:
-    QRandomGenerator randomGenerator_;
     QPoint position_;
-    QGraphicsEllipseItem* foodSquareGraphicalEllipseItem_;
+    QGraphicsEllipseItem* foodSquareGraphicalEllipseItem_ {};
 };

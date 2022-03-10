@@ -1,4 +1,5 @@
 #include "game_engine.h"
+#include "drawer.h"
 
 GameEngine::GameEngine()
 {
@@ -7,17 +8,74 @@ GameEngine::GameEngine()
 
 void GameEngine::startGame()
 {
-    Drawer::eraseFood(food_.getFoodSquareGraphicalEllipseItem());
+    Drawer::eraseFood(food_);
     snake_.reset();
-    food_.generateAndPlace();
+
+    Drawer::redrawSnake(snake_);
+
+    food_.generate();
+    Drawer::drawFood(food_);
+
     speedManager_.resetSpeed();
-    speedManager_.getGameTickTimer().start();
+    speedManager_.startGame();
 }
 
 void GameEngine::endGame()
 {
     speedManager_.stopGame();
     emit dialogRestartGameSignal();
+}
+
+void GameEngine::checkSnakeCollisionWithFoodSquare()
+{
+    if(snake_.getHeadPosition() == food_.getPosition())
+    {
+        Drawer::eraseFood(food_);
+        food_.generate();
+        Drawer::drawFood(food_);
+        snake_.grow();
+    }
+}
+
+void GameEngine::checkSnakeCollisionWithWall()
+{
+    if(snake_.getHeadPosition().x() > GameArenaParameters::maximumColumn ||
+       snake_.getHeadPosition().x() < GameArenaParameters::minimumRowColumn ||
+       snake_.getHeadPosition().y() > GameArenaParameters::maximumRow ||
+       snake_.getHeadPosition().y() < GameArenaParameters::minimumRowColumn)
+    {
+        endGame();
+    }
+}
+
+void GameEngine::checkSnakeCollisionWithItself()
+{
+    QVector<QPoint> snakePositions = snake_.getPositions();
+
+    /*Remove head position from snake positions, so it is not taken into account here*/
+    snakePositions.removeFirst();
+
+    QPoint headPosition = snake_.getHeadPosition();
+
+    if(snakePositions.contains(headPosition))
+    {
+        endGame();
+    }
+}
+
+void GameEngine::activateSpeedBoost()
+{
+    speedManager_.activateSpeedBoost();
+}
+
+void GameEngine::deactivateSpeedBoost()
+{
+    speedManager_.deactivateSpeedBoost();
+}
+
+void GameEngine::setGameSpeedLevel()
+{
+    speedManager_.setGameSpeedLevel();
 }
 
 void GameEngine::processKeyPress(const Key& key)
@@ -62,52 +120,6 @@ void GameEngine::processKeyPress(const Key& key)
     }
 }
 
-void GameEngine::checkSnakeCollisionWithFoodSquare()
-{
-    if(snake_.getHeadPosition() == food_.getPosition())
-    {
-        Drawer::eraseFood(food_.getFoodSquareGraphicalEllipseItem());
-        food_.generateAndPlace();
-        snake_.grow();
-    }
-}
-
-void GameEngine::checkSnakeCollisionWithWall()
-{
-    if(snake_.getHeadPosition().x() > GameArenaParameters::maximumColumn ||
-       snake_.getHeadPosition().x() < GameArenaParameters::minimumRowColumn ||
-       snake_.getHeadPosition().y() > GameArenaParameters::maximumRow ||
-       snake_.getHeadPosition().y() < GameArenaParameters::minimumRowColumn)
-    {
-        endGame();
-    }
-}
-
-void GameEngine::checkSnakeCollisionWithItself()
-{
-    QVector<QPoint> snakePositions = snake_.getPositions();
-
-    /*Remove head position from snake positions, so it is not taken into account here*/
-    snakePositions.removeFirst();
-
-    QPoint headPosition = snake_.getHeadPosition();
-
-    if(snakePositions.contains(headPosition))
-    {
-        endGame();
-    }
-}
-
-void GameEngine::activateSpeedBoost()
-{
-    speedManager_.activateSpeedBoost();
-}
-
-void GameEngine::deactivateSpeedBoost()
-{
-    speedManager_.deactivateSpeedBoost();
-}
-
 void GameEngine::gameTickSlot()
 {
     snake_.move();
@@ -117,10 +129,5 @@ void GameEngine::gameTickSlot()
     checkSnakeCollisionWithItself();
     checkSnakeCollisionWithFoodSquare();
 
-    emit redrawSnakeSignal();
-}
-
-void GameEngine::setGameSpeedLevel()
-{
-    speedManager_.setGameSpeedLevel();
+    Drawer::redrawSnake(snake_);
 }

@@ -1,5 +1,8 @@
 #pragma once
 
+#include "snake.h"
+#include "food.h"
+
 #include <QObject>
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
@@ -16,13 +19,15 @@ public:
     Drawer& operator=(Drawer&&) = delete;
 
     static void setScene(QGraphicsScene* scene) {scene_ = scene;}
-    static void drawSnake(const QVector<QPoint>& snakeSquarePositions, QVector<QGraphicsRectItem*>& snakeSquaresGraphicalRectItems);
-    static void eraseSnake(QVector<QGraphicsRectItem*>& snakeSquaresGraphicalRectItems);
-    static QGraphicsEllipseItem* drawFood(const QPoint& foodPosition);
-    static void eraseFood(QGraphicsEllipseItem* pFoodSquareGraphicalEllipseItem);
+    static void redrawSnake(Snake& snake);
+    static void drawFood(Food& food);
+    static void eraseFood(Food& food);
     static void drawGameArena();
     [[maybe_unused]] static void drawAllSquares();
 
 private:
-    inline static QGraphicsScene* scene_ = nullptr;
+    static void drawSnake(Snake& snake);
+    static void eraseSnake(Snake& snake);
+
+    inline static QGraphicsScene* scene_ {};
 };
