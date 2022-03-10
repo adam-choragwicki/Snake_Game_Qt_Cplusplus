@@ -20,8 +20,8 @@ public:
     static void eraseSnake(QVector<QGraphicsRectItem*>& snakeSquaresGraphicalRectItems);
     static QGraphicsEllipseItem* drawFood(const QPoint& foodPosition);
     static void eraseFood(QGraphicsEllipseItem* pFoodSquareGraphicalEllipseItem);
-    [[maybe_unused]] static void drawAllSquares();
     static void drawGameArena();
+    [[maybe_unused]] static void drawAllSquares();
 
 private:
     inline static QGraphicsScene* scene_ = nullptr;

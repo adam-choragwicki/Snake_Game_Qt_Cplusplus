@@ -5,7 +5,10 @@
 int main(int argc, char* argv[])
 {
     QApplication application(argc, argv);
-    GameWindow gameWindow;
+
+    GameEngine gameEngine;
+
+    GameWindow gameWindow(gameEngine);
     gameWindow.show();
 
     return application.exec();

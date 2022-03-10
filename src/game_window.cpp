@@ -2,7 +2,10 @@
 #include "ui_game_window.h"
 #include "drawer.h"
 
-GameWindow::GameWindow(QWidget* parent) : QMainWindow(parent), ui_(new Ui::GameWindow)
+GameWindow::GameWindow(GameEngine& gameEngine, QWidget* parent) :
+        QMainWindow(parent),
+        ui_(new Ui::GameWindow),
+        gameEngine_(gameEngine)
 {
     ui_->setupUi(this);
 
@@ -15,14 +18,15 @@ GameWindow::GameWindow(QWidget* parent) : QMainWindow(parent), ui_(new Ui::GameW
 
     Drawer::drawGameArena();
 
-    food_.generateAndPlace();
+    gameEngine_.getSpeedManager().connectSlider(*ui_->slider_Speed);
 
-    Drawer::drawSnake(snake_.getPositions(), snake_.getSnakeSquaresGraphicalRectItems());
+    Drawer::drawSnake(gameEngine_.getSnake().getPositions(), gameEngine.getSnake().getSnakeSquaresGraphicalRectItems());
 
-    connect(&gameTickTimer_, &QTimer::timeout, this, &GameWindow::gameTickSlot);
     connect(ui_->slider_Speed, &QSlider::valueChanged, this, &GameWindow::speedSliderValueChangedSlot);
+    connect(&gameEngine_, &GameEngine::redrawSnakeSignal, this, &GameWindow::redrawSnakeSlot);
+    connect(&gameEngine_, &GameEngine::dialogRestartGameSignal, this, &GameWindow::dialogRestartGameSlot);
 
-    startGame();
+    gameEngine_.startGame();
 }
 
 GameWindow::~GameWindow()
@@ -41,65 +45,40 @@ void GameWindow::initializeGameplayAreaScene()
     scene_.setSceneRect(0, 0, sceneWidth, sceneHeight);
 }
 
-void GameWindow::startGame()
-{
-    snake_.reset();
-    setGameSpeedLevel(ui_->slider_Speed->value());
-    gameTickTimer_.start();
-}
-
 void GameWindow::keyPressEvent(QKeyEvent* event)
 {
-    Snake::Direction currentDirection = snake_.getDirection();
-
-    int sliderValue = ui_->slider_Speed->value();
-
     switch(event->key())
     {
-        case Qt::Key_A:
         case Qt::Key_Left:
-            if(currentDirection != Snake::Direction::right)
-            {
-                snake_.setNextDirection(Snake::Direction::left);
-            }
+        case Qt::Key_A:
+            gameEngine_.processKeyPress(Key::left);
             break;
 
-        case Qt::Key_W:
-        case Qt::Key_Up:
-            if(currentDirection != Snake::Direction::down)
-            {
-                snake_.setNextDirection(Snake::Direction::up);
-            }
-            break;
-
-        case Qt::Key_S:
-        case Qt::Key_Down:
-            if(currentDirection != Snake::Direction::up)
-            {
-                snake_.setNextDirection(Snake::Direction::down);
-            }
-            break;
-
-        case Qt::Key_D:
         case Qt::Key_Right:
-            if(currentDirection != Snake::Direction::left)
-            {
-                snake_.setNextDirection(Snake::Direction::right);
-            }
+        case Qt::Key_D:
+            gameEngine_.processKeyPress(Key::right);
+            break;
+
+        case Qt::Key_Up:
+        case Qt::Key_W:
+            gameEngine_.processKeyPress(Key::up);
+            break;
+
+        case Qt::Key_Down:
+        case Qt::Key_S:
+            gameEngine_.processKeyPress(Key::down);
             break;
 
         case Qt::Key_Plus:
-            /*Subtracting means increasing speed*/
-            ui_->slider_Speed->setValue(sliderValue - 1);
+            gameEngine_.processKeyPress(Key::plus);
             break;
 
         case Qt::Key_Minus:
-            /*Adding means decreasing speed*/
-            ui_->slider_Speed->setValue(sliderValue + 1);
+            gameEngine_.processKeyPress(Key::minus);
             break;
 
         case Qt::Key_Space:
-            activateSpeedBoost();
+            gameEngine_.processKeyPress(Key::space);
             break;
     }
 }
@@ -108,37 +87,13 @@ void GameWindow::keyReleaseEvent(QKeyEvent* event)
 {
     switch(event->key())
     {
-    case Qt::Key_Space:
-        deactivateSpeedBoost();
-        break;
+        case Qt::Key_Space:
+            gameEngine_.deactivateSpeedBoost();
+            break;
     }
 }
 
-void GameWindow::checkSnakeCollisionWithFoodSquare()
-{
-    if(snake_.getHeadPosition() == food_.getPosition())
-    {
-        Drawer::eraseFood(food_.getFoodSquareGraphicalEllipseItem());
-        food_.generateAndPlace();
-        snake_.grow();
-    }
-}
-
-void GameWindow::checkSnakeCollisionWithWall()
-{
-    /*Check if snake hit a wall*/
-    if(snake_.getHeadPosition().x() > GameArenaParameters::maxim ||
-       snake_.getHeadPosition().x() < GameArenaParameters::minimumRowColumn ||
-       snake_.getHeadPosition().y() > GameArenaParameters::maximumRow ||
-       snake_.getHeadPosition().y() < GameArenaParameters::minimumRowColumn)
-    {
-        gameTickTimer_.stop();
-
-        dialogRestartGame();
-    }
-}
-
-void GameWindow::dialogRestartGame()
+void GameWindow::dialogRestartGameSlot()
 {
     int answer = QMessageBox::question(this,
                                        "Game over",
@@ -148,7 +103,7 @@ void GameWindow::dialogRestartGame()
 
     if(answer == QMessageBox::Ok)
     {
-        startGame();
+        gameEngine_.startGame();
     }
     else
     {
@@ -156,61 +111,13 @@ void GameWindow::dialogRestartGame()
     }
 }
 
-void GameWindow::checkSnakeCollisionWithItself()
+void GameWindow::redrawSnakeSlot()
 {
-    /*Check if snake hit itself*/
-    QVector<QPoint> snakePositions = snake_.getPositions();
-
-    /*Remove head position from snake positions, so it is not taken into account here*/
-    snakePositions.removeFirst();
-
-    QPoint headPosition = snake_.getHeadPosition();
-
-    if(snakePositions.contains(headPosition))
-    {
-        gameTickTimer_.stop();
-
-        dialogRestartGame();
-    }
+    Drawer::eraseSnake(gameEngine_.getSnake().getSnakeSquaresGraphicalRectItems());
+    Drawer::drawSnake(gameEngine_.getSnake().getPositions(), gameEngine_.getSnake().getSnakeSquaresGraphicalRectItems());
 }
 
-void GameWindow::redrawSnake()
+void GameWindow::speedSliderValueChangedSlot()
 {
-    Drawer::eraseSnake(snake_.getSnakeSquaresGraphicalRectItems());
-    Drawer::drawSnake(snake_.getPositions(), snake_.getSnakeSquaresGraphicalRectItems());
-}
-
-void GameWindow::gameTickSlot()
-{
-    snake_.move();
-    snake_.setDirection(snake_.getNextDirection());
-
-    checkSnakeCollisionWithWall();
-    checkSnakeCollisionWithItself();
-    checkSnakeCollisionWithFoodSquare();
-
-    redrawSnake();
-}
-
-void GameWindow::speedSliderValueChangedSlot(int value)
-{
-    setGameSpeedLevel(value);
-}
-
-void GameWindow::setGameSpeedLevel(int speedLevel)
-{
-    const int TIME_OFFSET = 20;
-
-    gameTickTimer_.setInterval(TIME_OFFSET + speedLevel * 20);
-}
-
-void GameWindow::activateSpeedBoost()
-{
-    const int BOOST_VALUE = 20;
-    gameTickTimer_.setInterval(BOOST_VALUE);
-}
-
-void GameWindow::deactivateSpeedBoost()
-{
-    setGameSpeedLevel(ui_->slider_Speed->value());
+    gameEngine_.setGameSpeedLevel();
 }

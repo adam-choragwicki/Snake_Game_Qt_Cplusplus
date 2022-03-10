@@ -23,9 +23,11 @@ set(SOURCE_FILES
     ${SOURCES_DIR}/main.cpp
     ${INCLUDES_DIR}/common.h
     ${INCLUDES_DIR}/game_window.h ${SOURCES_DIR}/game_window.cpp ${UI_FORMS_DIR}/game_window.ui
+    ${INCLUDES_DIR}/game_engine.h ${SOURCES_DIR}/game_engine.cpp
     ${INCLUDES_DIR}/food.h ${SOURCES_DIR}/food.cpp
     ${INCLUDES_DIR}/snake.h ${SOURCES_DIR}/snake.cpp
-    ${INCLUDES_DIR}/drawer.h ${SOURCES_DIR}/drawer.cpp)
+    ${INCLUDES_DIR}/drawer.h ${SOURCES_DIR}/drawer.cpp
+    ${INCLUDES_DIR}/speed_manager.h ${SOURCES_DIR}/speed_manager.cpp)
 
 add_library(libSnake ${SOURCE_FILES})
 target_include_directories(libSnake PUBLIC ${INCLUDES_DIR})

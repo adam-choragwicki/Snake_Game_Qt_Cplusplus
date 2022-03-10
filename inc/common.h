@@ -12,7 +12,7 @@ namespace GameArenaParameters
     const int wallThickness = snakeSegmentSize;
     const int minimumRowColumn = 0;
     const int maximumRow = rowsCount - 1;
-    const int maxim = columnCount - 1;
+    const int maximumColumn = columnCount - 1;
 
     const int leftBorderX = snakeSegmentSize / 2;
     const int rightBorderX = columnCount * snakeSegmentSize + 2 * wallThickness;
@@ -21,3 +21,11 @@ namespace GameArenaParameters
     const int bottomY = rowsCount * snakeSegmentSize + 2 * wallThickness;
     const int bottomYOffset = -snakeSegmentSize / 2;
 }
+
+enum class Direction
+{
+    left = 1,
+    up = 2,
+    down = 3,
+    right = 4
+};

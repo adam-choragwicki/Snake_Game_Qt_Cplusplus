@@ -11,7 +11,7 @@ void Food::generateAndPlace()
 {
     foodSquareGraphicalEllipseItem_ = nullptr;
 
-    int positionX = randomGenerator_.bounded(GameArenaParameters::minimumRowColumn, GameArenaParameters::maxim);
+    int positionX = randomGenerator_.bounded(GameArenaParameters::minimumRowColumn, GameArenaParameters::maximumColumn);
     int positionY = randomGenerator_.bounded(GameArenaParameters::minimumRowColumn, GameArenaParameters::maximumRow);
 
     position_.setX(positionX);
