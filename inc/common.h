@@ -4,8 +4,8 @@ namespace GameArenaParameters
 {
     const int foodSize = 20;
     const int foodOffset = 5;
-    const int rowsCount = 25;
-    const int columnCount = 50;
+    const int rowsCount = 20;
+    const int columnCount = 40;
 
     const int basicSquareSize = 30;
     const int snakeSegmentSize = basicSquareSize;

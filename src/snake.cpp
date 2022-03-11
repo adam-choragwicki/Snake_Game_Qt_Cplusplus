@@ -6,7 +6,7 @@ Snake::Snake()
     headPosition_ = positions_.front();
 
     setDirection(Direction::right);
-    setNextDirection(Direction::right);
+    setNextDirection(direction_);
 }
 
 void Snake::move()
@@ -74,5 +74,5 @@ void Snake::reset()
     headPosition_ = positions_.front();
 
     setDirection(Direction::right);
-    setNextDirection(Direction::right);
+    setNextDirection(direction_);
 }

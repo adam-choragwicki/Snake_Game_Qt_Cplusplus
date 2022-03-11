@@ -35,7 +35,7 @@ private:
     QVector<QPoint> positions_;
     QVector<QGraphicsRectItem*> snakeSquaresGraphicalRectItems_;
 
-    const QVector<QPoint> startingPositions_ = {QPoint(GameArenaParameters::columnCount / 2 + 2, GameArenaParameters::rowsCount / 2),
-                                                QPoint(GameArenaParameters::columnCount / 2 + 1, GameArenaParameters::rowsCount / 2),
-                                                QPoint(GameArenaParameters::columnCount / 2, GameArenaParameters::rowsCount / 2)};
+    const QVector<QPoint> startingPositions_ = {QPoint(22, 10),
+                                                QPoint(21, 10),
+                                                QPoint(20, 10)};
 };
