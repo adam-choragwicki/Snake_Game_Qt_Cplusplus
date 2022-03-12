@@ -8,8 +8,8 @@ void Food::generate()
 {
     if(foodSquareGraphicalEllipseItem_ == nullptr)
     {
-        int positionX = QRandomGenerator::global()->bounded(GameArenaParameters::minimumRowColumn, GameArenaParameters::maximumColumn);
-        int positionY = QRandomGenerator::global()->bounded(GameArenaParameters::minimumRowColumn, GameArenaParameters::maximumRow);
+        int positionX = QRandomGenerator::global()->bounded(GameParameters::Arena::minimumRowColumn, GameParameters::Arena::maximumColumn);
+        int positionY = QRandomGenerator::global()->bounded(GameParameters::Arena::minimumRowColumn, GameParameters::Arena::maximumRow);
 
         position_.setX(positionX);
         position_.setY(positionY);

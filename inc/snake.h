@@ -36,7 +36,7 @@ public:
     QVector<QGraphicsEllipseItem*>& getSnakeSquaresGraphicalEllipseItem() {return snakeSquaresGraphicalEllipseItems_;}
 
     inline static const QColor headColor = Qt::yellow;
-    inline static const QColor bodyColor = Qt::green;
+    inline static const QColor bodyColor = Qt::blue;
 
     class Segment
     {

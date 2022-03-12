@@ -31,10 +31,11 @@ GameWindow::~GameWindow()
 void GameWindow::initializeGameplayAreaScene()
 {
     ui_->graphicsView->setScene(&scene_);
+    ui_->graphicsView->setRenderHint(QPainter::Antialiasing);
     scene_.setBackgroundBrush(QBrush(Qt::black));
 
-    const int sceneWidth = GameArenaParameters::columnCount * GameArenaParameters::snakeSegmentSize + 2 * GameArenaParameters::wallThickness;
-    const int sceneHeight = GameArenaParameters::rowsCount * GameArenaParameters::snakeSegmentSize + 2 * GameArenaParameters::wallThickness;
+    const int sceneWidth = GameParameters::Arena::columnCount * GameParameters::snakeSegmentSize + 2 * GameParameters::Arena::wallThickness;
+    const int sceneHeight = GameParameters::Arena::rowsCount * GameParameters::snakeSegmentSize + 2 * GameParameters::Arena::wallThickness;
 
     scene_.setSceneRect(0, 0, sceneWidth, sceneHeight);
 

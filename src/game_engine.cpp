@@ -39,10 +39,10 @@ void GameEngine::checkSnakeCollisionWithFoodSquare()
 
 void GameEngine::checkSnakeCollisionWithWall()
 {
-    if(snake_.getHeadPosition().x() > GameArenaParameters::maximumColumn ||
-       snake_.getHeadPosition().x() < GameArenaParameters::minimumRowColumn ||
-       snake_.getHeadPosition().y() > GameArenaParameters::maximumRow ||
-       snake_.getHeadPosition().y() < GameArenaParameters::minimumRowColumn)
+    if(snake_.getHeadPosition().x() > GameParameters::Arena::maximumColumn ||
+       snake_.getHeadPosition().x() < GameParameters::Arena::minimumRowColumn ||
+       snake_.getHeadPosition().y() > GameParameters::Arena::maximumRow ||
+       snake_.getHeadPosition().y() < GameParameters::Arena::minimumRowColumn)
     {
         endGame();
     }
