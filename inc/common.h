@@ -8,6 +8,7 @@ namespace GameParameters
     const int foodInsideSnakeSize = static_cast<int>(basicSquareSize / 2);
     const int foodInsideSnakeOffset = 7;
     const int snakeSegmentSize = basicSquareSize;
+    const int snakeEyeSize = 6;
 
     namespace Arena
     {

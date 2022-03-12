@@ -27,6 +27,7 @@ public:
 
 private:
     static void drawSnake(Snake& snake);
+    static void drawEyes(Snake& snake, int eye1XOffset, int eye1YOffset, int eye2XOffset, int eye2YOffset);
     static void eraseSnake(Snake& snake);
 
     inline static QGraphicsScene* scene_ {};

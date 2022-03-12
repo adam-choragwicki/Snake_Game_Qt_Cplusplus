@@ -6,6 +6,7 @@
 #include <QQueue>
 #include <QPoint>
 #include <QGraphicsRectItem>
+#include <QPainter>
 
 class Snake
 {
@@ -32,11 +33,13 @@ public:
     QPoint& getHeadPosition() {return headPosition_;}
     Direction& getDirection() {return direction_;}
     Direction& getNextDirection() {return nextDirection_;}
-    QVector<QGraphicsRectItem*>& getSnakeSquaresGraphicalRectItems() {return snakeSquaresGraphicalRectItems_;}
-    QVector<QGraphicsEllipseItem*>& getSnakeSquaresGraphicalEllipseItem() {return snakeSquaresGraphicalEllipseItems_;}
+    QVector<QGraphicsRectItem*>& getSnakeSegmentsGraphicalRectItems() {return snakeSegmentsGraphicalRectItems_;}
+    QVector<QGraphicsEllipseItem*>& getFoodInsideSnakeGraphicalEllipseItem() {return foodInsideSnakeGraphicalEllipseItems_;}
+    QVector<QGraphicsEllipseItem*>& getSnakeEyesGraphicalEllipseItem() {return snakeEyesGraphicalEllipseItems_;}
 
     inline static const QColor headColor = Qt::yellow;
     inline static const QColor bodyColor = Qt::blue;
+    inline static const QColor eyesColor = Qt::darkGreen;
 
     class Segment
     {
@@ -65,8 +68,9 @@ private:
     Direction nextDirection_ {};
     QPoint headPosition_;
     QQueue<Segment> segments_;
-    QVector<QGraphicsRectItem*> snakeSquaresGraphicalRectItems_;
-    QVector<QGraphicsEllipseItem*> snakeSquaresGraphicalEllipseItems_;
+    QVector<QGraphicsRectItem*> snakeSegmentsGraphicalRectItems_;
+    QVector<QGraphicsEllipseItem*> foodInsideSnakeGraphicalEllipseItems_;
+    QVector<QGraphicsEllipseItem*> snakeEyesGraphicalEllipseItems_;
 
     const QVector<QPoint> startingPositions_ = {QPoint(20, 10),
                                                 QPoint(21, 10),
