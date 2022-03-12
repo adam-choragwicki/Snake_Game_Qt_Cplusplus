@@ -33,7 +33,7 @@ void GameEngine::checkSnakeCollisionWithFoodSquare()
         Drawer::eraseFood(food_);
         food_.generate();
         Drawer::drawFood(food_);
-        snake_.grow();
+        snake_.processFoodEaten();
     }
 }
 
@@ -50,7 +50,7 @@ void GameEngine::checkSnakeCollisionWithWall()
 
 void GameEngine::checkSnakeCollisionWithItself()
 {
-    QVector<Segment> snakeSegments = snake_.getSegments();
+    QVector<Snake::Segment> snakeSegments = snake_.getSegments();
 
     /*Remove head position from snake positions, so it is not taken into account here*/
     snakeSegments.removeFirst();

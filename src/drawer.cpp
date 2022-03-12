@@ -5,10 +5,12 @@ void Drawer::drawSnake(Snake& snake)
 {
     static const QBrush headBrush(Snake::headColor);
     static const QBrush bodyBrush(Snake::bodyColor);
+    static const QBrush foodInsideBrush(Qt::red);
 
-    const QVector<Segment>& snakeSegments = snake.getSegments();
+    const QVector<Snake::Segment>& snakeSegments = snake.getSegments();
 
     QVector<QGraphicsRectItem*>& snakeSquaresGraphicalRectItems = snake.getSnakeSquaresGraphicalRectItems();
+    QVector<QGraphicsEllipseItem*>& snakeSquaresGraphicalEllipseItems = snake.getSnakeSquaresGraphicalEllipseItem();
 
     for(auto& snakeSegment: snakeSegments)
     {
@@ -18,6 +20,16 @@ void Drawer::drawSnake(Snake& snake)
                                                               GameArenaParameters::snakeSegmentSize,
                                                               Qt::NoPen,
                                                               bodyBrush));
+
+        if(snakeSegment.isFoodInside())
+        {
+            snakeSquaresGraphicalEllipseItems.append(scene_->addEllipse(snakeSegment.getCoordinates().x() * GameArenaParameters::snakeSegmentSize + GameArenaParameters::snakeSegmentSize + GameArenaParameters::foodOffset,
+                                                                        snakeSegment.getCoordinates().y() * GameArenaParameters::snakeSegmentSize + GameArenaParameters::snakeSegmentSize + GameArenaParameters::foodOffset,
+                                                                        static_cast<int>(GameArenaParameters::snakeSegmentSize / 2),
+                                                                        static_cast<int>(GameArenaParameters::snakeSegmentSize / 2),
+                                                                        Qt::NoPen,
+                                                                        foodInsideBrush));
+        }
     }
 
     /*Set head color*/
@@ -27,6 +39,7 @@ void Drawer::drawSnake(Snake& snake)
 void Drawer::eraseSnake(Snake& snake)
 {
     QVector<QGraphicsRectItem*>& snakeSquaresGraphicalRectItems = snake.getSnakeSquaresGraphicalRectItems();
+    QVector<QGraphicsEllipseItem*>& snakeSquaresGraphicalEllipseItems = snake.getSnakeSquaresGraphicalEllipseItem();
 
     for(auto& snakeSquaresGraphicalRectItem: snakeSquaresGraphicalRectItems)
     {
@@ -36,6 +49,17 @@ void Drawer::eraseSnake(Snake& snake)
         }
     }
 
+    for(auto& snakeSquaresGraphicalEllipseItem: snakeSquaresGraphicalEllipseItems)
+    {
+        if(snakeSquaresGraphicalEllipseItem)
+        {
+            scene_->removeItem(snakeSquaresGraphicalEllipseItem);
+        }
+
+        snakeSquaresGraphicalEllipseItem = nullptr;
+    }
+
+    snakeSquaresGraphicalEllipseItems.clear();
     snakeSquaresGraphicalRectItems.clear();
 }
 

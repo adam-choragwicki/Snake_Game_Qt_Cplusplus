@@ -7,8 +7,6 @@ Snake::Snake()
 
 void Snake::move()
 {
-    segments_.removeLast();
-
     switch(direction_)
     {
         case Direction::left:
@@ -27,32 +25,39 @@ void Snake::move()
             segments_.prepend(Segment(headPosition_.x(), headPosition_.y() + 1));
             break;
     }
+
+    /*Potential snake growing is inherently part of movement process*/
+    checkAndProcessGrowth();
 
     updateHeadPosition();
 }
 
+void Snake::processFoodEaten()
+{
+    segments_[0].setIsFoodInside(true);
+}
+
+void Snake::checkAndProcessGrowth()
+{
+    if(segments_.back().isFoodInside())
+    {
+        grow();
+    }
+    else
+    {
+        removeTail();
+    }
+}
+
 void Snake::grow()
 {
-    switch(direction_)
-    {
-        case Direction::left:
-            segments_.prepend(Segment(headPosition_.x() - 1, headPosition_.y()));
-            break;
+    /*Growing is actually not removing the tail segment if there is food inside it*/
+    segments_.back().setIsFoodInside(false);
+}
 
-        case Direction::right:
-            segments_.prepend(Segment(headPosition_.x() + 1, headPosition_.y()));
-            break;
-
-        case Direction::up:
-            segments_.prepend(Segment(headPosition_.x(), headPosition_.y() - 1));
-            break;
-
-        case Direction::down:
-            segments_.prepend(Segment(headPosition_.x(), headPosition_.y() + 1));
-            break;
-    }
-
-    updateHeadPosition();
+void Snake::removeTail()
+{
+    segments_.removeLast();
 }
 
 void Snake::reset()
