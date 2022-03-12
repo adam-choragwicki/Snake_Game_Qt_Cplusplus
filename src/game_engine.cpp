@@ -50,14 +50,14 @@ void GameEngine::checkSnakeCollisionWithWall()
 
 void GameEngine::checkSnakeCollisionWithItself()
 {
-    QVector<QPoint> snakePositions = snake_.getPositions();
+    QVector<Segment> snakeSegments = snake_.getSegments();
 
     /*Remove head position from snake positions, so it is not taken into account here*/
-    snakePositions.removeFirst();
+    snakeSegments.removeFirst();
 
     QPoint headPosition = snake_.getHeadPosition();
 
-    if(snakePositions.contains(headPosition))
+    if(snakeSegments.contains(headPosition))
     {
         endGame();
     }

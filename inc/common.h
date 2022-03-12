@@ -24,10 +24,10 @@ namespace GameArenaParameters
 
 enum class Direction
 {
-    left = 1,
+    left = 0,
+    right = 1,
     up = 2,
-    down = 3,
-    right = 4
+    down = 3
 };
 
 enum class Key

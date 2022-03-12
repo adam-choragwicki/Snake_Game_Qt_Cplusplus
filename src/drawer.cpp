@@ -6,13 +6,14 @@ void Drawer::drawSnake(Snake& snake)
     static const QBrush headBrush(Snake::headColor);
     static const QBrush bodyBrush(Snake::bodyColor);
 
-    const QVector<QPoint>& snakeSquarePositions = snake.getPositions();
+    const QVector<Segment>& snakeSegments = snake.getSegments();
+
     QVector<QGraphicsRectItem*>& snakeSquaresGraphicalRectItems = snake.getSnakeSquaresGraphicalRectItems();
 
-    for(auto& snakeSquarePosition: snakeSquarePositions)
+    for(auto& snakeSegment: snakeSegments)
     {
-        snakeSquaresGraphicalRectItems.append(scene_->addRect(snakeSquarePosition.x() * GameArenaParameters::snakeSegmentSize + GameArenaParameters::snakeSegmentSize,
-                                                              snakeSquarePosition.y() * GameArenaParameters::snakeSegmentSize + GameArenaParameters::snakeSegmentSize,
+        snakeSquaresGraphicalRectItems.append(scene_->addRect(snakeSegment.getCoordinates().x() * GameArenaParameters::snakeSegmentSize + GameArenaParameters::snakeSegmentSize,
+                                                              snakeSegment.getCoordinates().y() * GameArenaParameters::snakeSegmentSize + GameArenaParameters::snakeSegmentSize,
                                                               GameArenaParameters::snakeSegmentSize,
                                                               GameArenaParameters::snakeSegmentSize,
                                                               Qt::NoPen,
