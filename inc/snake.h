@@ -12,25 +12,20 @@ class Snake
 {
 public:
     Snake();
+    ~Snake();
 
-    void move();
+    void moveForward();
     void processFoodEaten();
     void grow();
-    void reset();
 
     void setDirection(const Direction& direction) {direction_ = direction;}
     void setNextDirection(const Direction& nextDirection) {nextDirection_ = nextDirection;}
-
-    void updateHeadCoordinates()
-    {
-        headCoordinates_ = segments_.front().getCoordinates();
-    }
 
     /*Forward declaration*/
     class Segment;
 
     QVector<Segment>& getSegments() {return segments_;}
-    Coordinates& getHeadCoordinates() {return headCoordinates_;}
+    [[nodiscard]] const Coordinates& getHeadCoordinates() const {return segments_.front().getCoordinates();}
     Direction& getDirection() {return direction_;}
     Direction& getNextDirection() {return nextDirection_;}
     QVector<QGraphicsRectItem*>& getSnakeSegmentsGraphicalRectItems() {return snakeSegmentsGraphicalRectItems_;}
@@ -66,7 +61,6 @@ public:
 private:
     Direction direction_ {};
     Direction nextDirection_ {};
-    Coordinates headCoordinates_;
     QQueue<Segment> segments_;
     QVector<QGraphicsRectItem*> snakeSegmentsGraphicalRectItems_;
     QVector<QGraphicsEllipseItem*> foodInsideSnakeGraphicalEllipseItems_;

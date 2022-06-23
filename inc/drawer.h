@@ -18,6 +18,8 @@ public:
     Drawer& operator=(Drawer&&) = delete;
 
     static void setScene(QGraphicsScene* scene) {scene_ = scene;}
+    static void drawSnake(Snake& snake);
+    static void eraseSnake(Snake& snake);
     static void redrawSnake(Snake& snake);
     static void drawFood(Food& food);
     static void eraseFood(Food& food);
@@ -25,9 +27,7 @@ public:
     [[maybe_unused]] static void drawAllSquares();
 
 private:
-    static void drawSnake(Snake& snake);
     static void drawEyes(Snake& snake, int eye1XOffset, int eye1YOffset, int eye2XOffset, int eye2YOffset);
-    static void eraseSnake(Snake& snake);
 
     inline static QGraphicsScene* scene_ {};
 };

@@ -8,10 +8,7 @@ GameEngine::GameEngine()
 
 void GameEngine::startGame()
 {
-    snake_.reset();
-
-    Drawer::redrawSnake(snake_);
-
+    snake_ = std::make_unique<Snake>();
     food_ = std::make_unique<Food>();
 
     speedManager_.resetSpeed();
@@ -26,16 +23,16 @@ void GameEngine::endGame()
 
 void GameEngine::checkSnakeCollisionWithFoodSquare()
 {
-    if(snake_.getHeadCoordinates() == food_->getPosition())
+    if(snake_->getHeadCoordinates() == food_->getPosition())
     {
         food_ = std::make_unique<Food>();
-        snake_.processFoodEaten();
+        snake_->processFoodEaten();
     }
 }
 
 void GameEngine::checkSnakeCollisionWithWall()
 {
-    const Coordinates& headCoordinates = snake_.getHeadCoordinates();
+    const Coordinates& headCoordinates = snake_->getHeadCoordinates();
 
     if((headCoordinates.x > GameParameters::Arena::maximumColumn) || (headCoordinates.x < GameParameters::Arena::minimumRowColumn) ||
        (headCoordinates.y > GameParameters::Arena::maximumRow) || (headCoordinates.y < GameParameters::Arena::minimumRowColumn))
@@ -46,12 +43,12 @@ void GameEngine::checkSnakeCollisionWithWall()
 
 void GameEngine::checkSnakeCollisionWithItself()
 {
-    QVector<Snake::Segment> snakeSegments = snake_.getSegments();
+    QVector<Snake::Segment> snakeSegments = snake_->getSegments();
 
     /*Remove head position from snake positions, so it is not taken into account here*/
     snakeSegments.removeFirst();
 
-    Coordinates headPosition = snake_.getHeadCoordinates();
+    Coordinates headPosition = snake_->getHeadCoordinates();
 
     if(snakeSegments.contains(headPosition))
     {
@@ -76,32 +73,32 @@ void GameEngine::setGameSpeedLevel()
 
 void GameEngine::processKeyPress(const Key& key)
 {
-    const Direction currentDirection = snake_.getDirection();
+    const Direction currentDirection = snake_->getDirection();
 
     switch(key)
     {
         case Key::left:
             if(currentDirection != Direction::right)
             {
-                snake_.setNextDirection(Direction::left);
+                snake_->setNextDirection(Direction::left);
             }
             break;
         case Key::right:
             if(currentDirection != Direction::left)
             {
-                snake_.setNextDirection(Direction::right);
+                snake_->setNextDirection(Direction::right);
             }
             break;
         case Key::up:
             if(currentDirection != Direction::down)
             {
-                snake_.setNextDirection(Direction::up);
+                snake_->setNextDirection(Direction::up);
             }
             break;
         case Key::down:
             if(currentDirection != Direction::up)
             {
-                snake_.setNextDirection(Direction::down);
+                snake_->setNextDirection(Direction::down);
             }
             break;
         case Key::plus:
@@ -118,12 +115,12 @@ void GameEngine::processKeyPress(const Key& key)
 
 void GameEngine::gameTickSlot()
 {
-    snake_.move();
-    snake_.setDirection(snake_.getNextDirection());
+    snake_->moveForward();
+    snake_->setDirection(snake_->getNextDirection());
 
     checkSnakeCollisionWithWall();
     checkSnakeCollisionWithItself();
     checkSnakeCollisionWithFoodSquare();
 
-    Drawer::redrawSnake(snake_);
+    Drawer::redrawSnake(*snake_);
 }

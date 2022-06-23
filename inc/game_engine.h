@@ -33,7 +33,7 @@ private:
     void checkSnakeCollisionWithFoodSquare();
     void endGame();
 
-    Snake snake_;
+    std::unique_ptr<Snake> snake_;
     std::unique_ptr<Food> food_;
     SpeedManager speedManager_;
 };
