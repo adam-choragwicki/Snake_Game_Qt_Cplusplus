@@ -128,22 +128,24 @@ void Drawer::drawFood(Food& food)
     static const QBrush brush(Food::color);
 
     const Coordinates& foodCoordinates = food.getPosition();
-    QGraphicsEllipseItem*& foodGraphicalEllipseItem = food.getFoodGraphicalEllipseItem();
 
-    foodGraphicalEllipseItem = scene_->addEllipse(foodCoordinates.x * GameParameters::snakeSegmentSize + GameParameters::snakeSegmentSize + GameParameters::foodInsideSnakeOffset,
-                                                  foodCoordinates.y * GameParameters::snakeSegmentSize + GameParameters::snakeSegmentSize + GameParameters::foodInsideSnakeOffset,
-                                                  GameParameters::foodSize,
-                                                  GameParameters::foodSize,
-                                                  outlinePen,
-                                                  brush);
+    food.setFoodSquareGraphicalEllipseItem(scene_->addEllipse(foodCoordinates.x * GameParameters::snakeSegmentSize + GameParameters::snakeSegmentSize + GameParameters::foodInsideSnakeOffset,
+                                                              foodCoordinates.y * GameParameters::snakeSegmentSize + GameParameters::snakeSegmentSize + GameParameters::foodInsideSnakeOffset,
+                                                              GameParameters::foodSize,
+                                                              GameParameters::foodSize,
+                                                              outlinePen,
+                                                              brush));
 }
 
 void Drawer::eraseFood(Food& food)
 {
-    QGraphicsEllipseItem*& foodGraphicalEllipseItem = food.getFoodGraphicalEllipseItem();
+    QGraphicsEllipseItem* foodGraphicalEllipseItem = food.getFoodGraphicalEllipseItem();
 
-    scene_->removeItem(food.getFoodGraphicalEllipseItem());
-    foodGraphicalEllipseItem = nullptr;
+    if(foodGraphicalEllipseItem)
+    {
+        scene_->removeItem(foodGraphicalEllipseItem);
+        food.resetFoodSquareGraphicalEllipseItem();
+    }
 }
 
 void Drawer::drawGameArena()

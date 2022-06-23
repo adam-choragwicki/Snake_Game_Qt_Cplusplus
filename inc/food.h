@@ -8,15 +8,19 @@
 class Food
 {
 public:
-    Food() = default;
+    Food();
+    virtual ~Food();
 
-    void generate();
     [[nodiscard]] const Coordinates& getPosition() const {return coordinates_;}
-    [[nodiscard]] QGraphicsEllipseItem*& getFoodGraphicalEllipseItem(){return foodSquareGraphicalEllipseItem_;}
+    [[nodiscard]] QGraphicsEllipseItem* getFoodGraphicalEllipseItem(){return foodSquareGraphicalEllipseItem_;}
+    void setFoodSquareGraphicalEllipseItem(QGraphicsEllipseItem* foodSquareGraphicalEllipseItem);
+    void resetFoodSquareGraphicalEllipseItem() {foodSquareGraphicalEllipseItem_ = nullptr;}
 
     inline static const QColor color = Qt::red;
 
 private:
-    Coordinates coordinates_;
+    const Coordinates coordinates_;
     QGraphicsEllipseItem* foodSquareGraphicalEllipseItem_ {};
+
+    Coordinates generateCoordinates();
 };

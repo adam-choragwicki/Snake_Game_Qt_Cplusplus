@@ -8,13 +8,11 @@ GameEngine::GameEngine()
 
 void GameEngine::startGame()
 {
-    Drawer::eraseFood(food_);
     snake_.reset();
 
     Drawer::redrawSnake(snake_);
 
-    food_.generate();
-    Drawer::drawFood(food_);
+    food_ = std::make_unique<Food>();
 
     speedManager_.resetSpeed();
     speedManager_.startGame();
@@ -28,11 +26,9 @@ void GameEngine::endGame()
 
 void GameEngine::checkSnakeCollisionWithFoodSquare()
 {
-    if(snake_.getHeadCoordinates() == food_.getPosition())
+    if(snake_.getHeadCoordinates() == food_->getPosition())
     {
-        Drawer::eraseFood(food_);
-        food_.generate();
-        Drawer::drawFood(food_);
+        food_ = std::make_unique<Food>();
         snake_.processFoodEaten();
     }
 }

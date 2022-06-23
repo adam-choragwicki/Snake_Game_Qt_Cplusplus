@@ -34,6 +34,6 @@ private:
     void endGame();
 
     Snake snake_;
-    Food food_;
+    std::unique_ptr<Food> food_;
     SpeedManager speedManager_;
 };
