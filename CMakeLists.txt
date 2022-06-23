@@ -28,7 +28,8 @@ set(SOURCE_FILES
     ${INCLUDES_DIR}/snake.h ${SOURCES_DIR}/snake.cpp
     ${INCLUDES_DIR}/drawer.h ${SOURCES_DIR}/drawer.cpp
     ${INCLUDES_DIR}/log_manager.h ${SOURCES_DIR}/log_manager.cpp
-    ${INCLUDES_DIR}/game_speed_manager.h ${SOURCES_DIR}/game_speed_manager.cpp)
+    ${INCLUDES_DIR}/game_speed_manager.h ${SOURCES_DIR}/game_speed_manager.cpp
+    ${INCLUDES_DIR}/coordinates.h ${SOURCES_DIR}/coordinates.cpp)
 
 add_library(libSnake ${SOURCE_FILES})
 target_include_directories(libSnake PUBLIC ${INCLUDES_DIR})

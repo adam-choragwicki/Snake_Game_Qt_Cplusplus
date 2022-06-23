@@ -7,7 +7,6 @@
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
 #include <QVector>
-#include <QPoint>
 
 class Drawer
 {

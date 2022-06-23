@@ -10,26 +10,26 @@ void Snake::move()
     switch(direction_)
     {
         case Direction::left:
-            segments_.prepend(Segment(headPosition_.x() - 1, headPosition_.y()));
+            segments_.prepend(Segment(headCoordinates_.x - 1, headCoordinates_.y));
             break;
 
         case Direction::right:
-            segments_.prepend(Segment(headPosition_.x() + 1, headPosition_.y()));
+            segments_.prepend(Segment(headCoordinates_.x + 1, headCoordinates_.y));
             break;
 
         case Direction::up:
-            segments_.prepend(Segment(headPosition_.x(), headPosition_.y() - 1));
+            segments_.prepend(Segment(headCoordinates_.x, headCoordinates_.y - 1));
             break;
 
         case Direction::down:
-            segments_.prepend(Segment(headPosition_.x(), headPosition_.y() + 1));
+            segments_.prepend(Segment(headCoordinates_.x, headCoordinates_.y + 1));
             break;
     }
 
     /*Potential snake growing is inherently part of movement process*/
     checkAndProcessGrowth();
 
-    updateHeadPosition();
+    updateHeadCoordinates();
 }
 
 void Snake::processFoodEaten()
@@ -65,12 +65,12 @@ void Snake::reset()
     segments_.clear();
     segments_.squeeze();
 
-    for(const auto& position: startingPositions_)
+    for(const auto& coordinates : startingCoordinates_)
     {
-        segments_.emplaceBack(position);
+        segments_.emplaceBack(coordinates);
     }
 
-    headPosition_ = segments_.front().getCoordinates();
+    headCoordinates_ = segments_.front().getCoordinates();
 
     setDirection(Direction::left);
     setNextDirection(direction_);

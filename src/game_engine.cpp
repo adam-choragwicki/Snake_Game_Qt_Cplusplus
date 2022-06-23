@@ -28,7 +28,7 @@ void GameEngine::endGame()
 
 void GameEngine::checkSnakeCollisionWithFoodSquare()
 {
-    if(snake_.getHeadPosition() == food_.getPosition())
+    if(snake_.getHeadCoordinates() == food_.getPosition())
     {
         Drawer::eraseFood(food_);
         food_.generate();
@@ -39,10 +39,10 @@ void GameEngine::checkSnakeCollisionWithFoodSquare()
 
 void GameEngine::checkSnakeCollisionWithWall()
 {
-    if(snake_.getHeadPosition().x() > GameParameters::Arena::maximumColumn ||
-       snake_.getHeadPosition().x() < GameParameters::Arena::minimumRowColumn ||
-       snake_.getHeadPosition().y() > GameParameters::Arena::maximumRow ||
-       snake_.getHeadPosition().y() < GameParameters::Arena::minimumRowColumn)
+    const Coordinates& headCoordinates = snake_.getHeadCoordinates();
+
+    if((headCoordinates.x > GameParameters::Arena::maximumColumn) || (headCoordinates.x < GameParameters::Arena::minimumRowColumn) ||
+       (headCoordinates.y > GameParameters::Arena::maximumRow) || (headCoordinates.y < GameParameters::Arena::minimumRowColumn))
     {
         endGame();
     }
@@ -55,7 +55,7 @@ void GameEngine::checkSnakeCollisionWithItself()
     /*Remove head position from snake positions, so it is not taken into account here*/
     snakeSegments.removeFirst();
 
-    QPoint headPosition = snake_.getHeadPosition();
+    Coordinates headPosition = snake_.getHeadCoordinates();
 
     if(snakeSegments.contains(headPosition))
     {
