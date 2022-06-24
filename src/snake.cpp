@@ -5,7 +5,7 @@ Snake::Snake()
 {
     for(const auto& coordinates : startingCoordinates_)
     {
-        segments_.emplaceBack(coordinates);
+        segments_.emplaceBack(new SnakeSegment{coordinates.x, coordinates.y});
     }
 
     setDirection(Direction::left);
@@ -26,19 +26,19 @@ void Snake::moveForward()
     switch(direction_)
     {
         case Direction::left:
-            segments_.prepend(Segment(headCoordinates.x - 1, headCoordinates.y));
+            segments_.prepend(new SnakeSegment{headCoordinates.x - 1, headCoordinates.y});
             break;
 
         case Direction::right:
-            segments_.prepend(Segment(headCoordinates.x + 1, headCoordinates.y));
+            segments_.prepend(new SnakeSegment{headCoordinates.x + 1, headCoordinates.y});
             break;
 
         case Direction::up:
-            segments_.prepend(Segment(headCoordinates.x, headCoordinates.y - 1));
+            segments_.prepend(new SnakeSegment{headCoordinates.x, headCoordinates.y - 1});
             break;
 
         case Direction::down:
-            segments_.prepend(Segment(headCoordinates.x, headCoordinates.y + 1));
+            segments_.prepend(new SnakeSegment{headCoordinates.x, headCoordinates.y + 1});
             break;
     }
 
@@ -48,12 +48,12 @@ void Snake::moveForward()
 
 void Snake::processFoodEaten()
 {
-    segments_[0].setIsFoodInside(true);
+    segments_[0]->setIsFoodInside(true);
 }
 
 void Snake::checkAndProcessGrowth()
 {
-    if(segments_.back().isFoodInside())
+    if(segments_.back()->isFoodInside())
     {
         grow();
     }
@@ -66,7 +66,7 @@ void Snake::checkAndProcessGrowth()
 void Snake::grow()
 {
     /*Growing is actually not removing the tail segment if there is food inside it*/
-    segments_.back().setIsFoodInside(false);
+    segments_.back()->setIsFoodInside(false);
 }
 
 void Snake::removeTail()

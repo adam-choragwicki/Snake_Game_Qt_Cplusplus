@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QBrush>
+
 namespace GameParameters
 {
     const int basicSquareSize = 30;
@@ -9,6 +11,10 @@ namespace GameParameters
     const int foodInsideSnakeOffset = 7;
     const int snakeSegmentSize = basicSquareSize;
     const int snakeEyeSize = 6;
+
+    inline static const QColor snakeHeadColor = Qt::yellow;
+    inline static const QColor snakeBodyColor = Qt::blue;
+    inline static const QColor snakeEyesColor = Qt::darkGreen;
 
     namespace Arena
     {

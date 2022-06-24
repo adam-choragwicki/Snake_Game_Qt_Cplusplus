@@ -43,16 +43,19 @@ void GameEngine::checkSnakeCollisionWithWall()
 
 void GameEngine::checkSnakeCollisionWithItself()
 {
-    QVector<Snake::Segment> snakeSegments = snake_->getSegments();
+    QVector<SnakeSegment*> snakeSegments = snake_->getSegments();
 
     /*Remove head position from snake positions, so it is not taken into account here*/
     snakeSegments.removeFirst();
 
     Coordinates headPosition = snake_->getHeadCoordinates();
 
-    if(snakeSegments.contains(headPosition))
+    for(const SnakeSegment* snakeSegment : snakeSegments)
     {
-        endGame();
+        if(headPosition == snakeSegment->getCoordinates())
+        {
+            endGame();
+        }
     }
 }
 
