@@ -6,9 +6,8 @@
 class SpeedManager
 {
 public:
-    explicit SpeedManager() = default;
+    explicit SpeedManager(QSlider* gameSpeedSlider);
 
-    void connectSlider(QSlider& slider);
     void processIncreaseSpeed();
     void processDecreaseSpeed();
     void activateSpeedBoost();
@@ -16,7 +15,6 @@ public:
     void setGameSpeedLevel();
     void startGame();
     void stopGame();
-    void resetSpeed();
     QTimer& getGameTickTimer();
 
 private:

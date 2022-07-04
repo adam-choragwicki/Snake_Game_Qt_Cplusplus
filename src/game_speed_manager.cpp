@@ -1,13 +1,8 @@
 #include "game_speed_manager.h"
 
-void SpeedManager::connectSlider(QSlider& slider)
+SpeedManager::SpeedManager(QSlider* gameSpeedSlider)
 {
-    slider_ = &slider;
-}
-
-void SpeedManager::resetSpeed()
-{
-    slider_->setValue(defaultSpeedLevel);
+    slider_ = gameSpeedSlider;
     setGameSpeedLevel();
 }
 
@@ -29,8 +24,8 @@ void SpeedManager::processDecreaseSpeed()
 
 void SpeedManager::activateSpeedBoost()
 {
-    const int BOOST_VALUE = 20;
-    gameTickTimer_.setInterval(BOOST_VALUE);
+    const int boostValue = 20;
+    gameTickTimer_.setInterval(boostValue);
 }
 
 void SpeedManager::deactivateSpeedBoost()

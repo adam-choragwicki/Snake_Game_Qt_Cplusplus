@@ -1,17 +1,25 @@
 #include "food.h"
 #include "drawer.h"
-#include "common.h"
+#include "config.h"
 
 #include <QRandomGenerator>
 
 Food::Food() : coordinates_(generateCoordinates())
 {
-    Drawer::drawFood(*this);
+    setPen(Qt::NoPen);
+    setBrush(GameParameters::foodColor);
+
+    setRect(coordinates_.x_ * GameParameters::snakeSegmentSize + GameParameters::foodInsideSnakeOffset,
+            coordinates_.y_ * GameParameters::snakeSegmentSize + GameParameters::foodInsideSnakeOffset,
+            GameParameters::foodSize,
+            GameParameters::foodSize);
+
+    Drawer::drawItem(this);
 }
 
 Food::~Food()
 {
-    Drawer::eraseFood(*this);
+    Drawer::eraseItem(this);
 }
 
 Coordinates Food::generateCoordinates()
@@ -20,16 +28,4 @@ Coordinates Food::generateCoordinates()
     int y = QRandomGenerator::global()->bounded(GameParameters::Arena::minimumRowColumn, GameParameters::Arena::maximumRow);
 
     return Coordinates{x, y};
-}
-
-void Food::setFoodSquareGraphicalEllipseItem(QGraphicsEllipseItem* foodSquareGraphicalEllipseItem)
-{
-    if(foodSquareGraphicalEllipseItem_ == nullptr)
-    {
-        foodSquareGraphicalEllipseItem_ = foodSquareGraphicalEllipseItem;
-    }
-    else
-    {
-        throw std::runtime_error("Food ellipse item already exists");
-    }
 }

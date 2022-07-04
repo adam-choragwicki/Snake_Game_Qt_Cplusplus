@@ -1,75 +1,179 @@
 #include "snake.h"
 #include "drawer.h"
+#include "log_manager.h"
 
 Snake::Snake()
 {
-    for(const auto& coordinates : startingCoordinates_)
+    segments_.emplaceBack(new HeadSegment{startingCoordinates_.at(0), direction_});
+
+    for(int i = 1; i < startingCoordinates_.size(); ++i)
     {
-        segments_.emplaceBack(new SnakeSegment{coordinates.x, coordinates.y});
+        addSegment(startingCoordinates_.at(i));
     }
 
     setDirection(Direction::left);
     setNextDirection(direction_);
-
-    Drawer::drawSnake(*this);
 }
 
 Snake::~Snake()
 {
-    Drawer::eraseSnake(*this);
+    for(const SnakeSegment* segment : segments_)
+    {
+        delete segment;
+    }
 }
 
 void Snake::moveForward()
 {
-    const Coordinates& headCoordinates = getHeadCoordinates();
+    Coordinates previousSegmentCoordinates = getHeadCoordinates();
+    segments_.head()->move(direction_);
 
-    switch(direction_)
+    const Coordinates& tailCoordinates = getTailCoordinates();
+
+    /*Necessary for extending tail in proper direction*/
+    Direction tailDirection;
+
+    for(auto iter = segments_.begin() + 1; iter != segments_.end(); ++iter)
     {
-        case Direction::left:
-            segments_.prepend(new SnakeSegment{headCoordinates.x - 1, headCoordinates.y});
-            break;
+        SnakeSegment* snakeSegment = *iter;
+        Coordinates currentSegmentCoordinates = snakeSegment->getCoordinates();
+        Direction moveDirection = calculateSegmentDirection(previousSegmentCoordinates, currentSegmentCoordinates);
 
-        case Direction::right:
-            segments_.prepend(new SnakeSegment{headCoordinates.x + 1, headCoordinates.y});
-            break;
+        if(currentSegmentCoordinates == tailCoordinates)
+        {
+            tailDirection = moveDirection;
+        }
 
-        case Direction::up:
-            segments_.prepend(new SnakeSegment{headCoordinates.x, headCoordinates.y - 1});
-            break;
-
-        case Direction::down:
-            segments_.prepend(new SnakeSegment{headCoordinates.x, headCoordinates.y + 1});
-            break;
+        snakeSegment->move(moveDirection);
+        previousSegmentCoordinates = currentSegmentCoordinates;
     }
 
-    /*Potential snake growing is inherently part of movement process*/
-    checkAndProcessGrowth();
+    shiftFoodInsideSnake(tailDirection);
+}
+
+void Snake::shiftFoodInsideSnake(Direction& tailSegmentDirection)
+{
+    const Coordinates& headCoordinates = getHeadCoordinates();
+    const Coordinates& tailCoordinates = getTailCoordinates();
+
+    /*Iterate from back to front, shifting food inside snake*/
+    for(int i = segments_.size() - 1; i >= 0; --i)
+    {
+        SnakeSegment* segment = segments_.at(i);
+        const Coordinates& segmentCoordinates = segment->getCoordinates();
+
+        if(segmentCoordinates == headCoordinates)
+        {
+            if(segment->isFoodInside())
+            {
+                segments_.at(i + 1)->setIsFoodInside(true);
+                segments_.at(i)->setIsFoodInside(false);
+            }
+            else
+            {
+                segments_.at(i + 1)->setIsFoodInside(false);
+            }
+        }
+        else if(segmentCoordinates == tailCoordinates)
+        {
+            if(segment->isFoodInside())
+            {
+                segment->setIsFoodInside(false);
+                grow(tailSegmentDirection);
+            }
+        }
+        else
+        {
+            if(segment->isFoodInside())
+            {
+                segments_.at(i + 1)->setIsFoodInside(true);
+                segments_.at(i)->setIsFoodInside(false);
+            }
+            else
+            {
+                segments_.at(i + 1)->setIsFoodInside(false);
+            }
+        }
+    }
 }
 
 void Snake::processFoodEaten()
 {
-    segments_[0]->setIsFoodInside(true);
+    segments_.head()->setIsFoodInside(true);
 }
 
-void Snake::checkAndProcessGrowth()
+void Snake::grow(Direction tailDirection)
 {
-    if(segments_.back()->isFoodInside())
+    const Coordinates& tailCoordinates = segments_.back()->getCoordinates();
+
+    if(tailDirection == Direction::left)
     {
-        grow();
+        addSegment(tailCoordinates + std::pair{+1, 0});
+    }
+    else if(tailDirection == Direction::right)
+    {
+        addSegment(tailCoordinates + std::pair{-1, 0});
+    }
+    else if(tailDirection == Direction::up)
+    {
+        addSegment(tailCoordinates + std::pair{0, -1});
+    }
+    else if(tailDirection == Direction::down)
+    {
+        addSegment(tailCoordinates + std::pair{0, +1});
+    }
+}
+
+std::ostream& operator<<(std::ostream& os, const Snake& snake)
+{
+    for(const auto& segment : snake.segments_)
+    {
+        os << segment->getCoordinates();
+    }
+
+    return os;
+}
+
+void Snake::addSegment(const Coordinates& coordinates)
+{
+    logFile << "Add segment on coordinates=" << coordinates << std::endl;
+    segments_.emplaceBack(new SnakeSegment{coordinates});
+}
+
+Direction Snake::calculateSegmentDirection(const Coordinates& previousSegmentCoordinates, const Coordinates& currentSegmentCoordinates)
+{
+    const std::pair<int, int> coordinatesDifference = currentSegmentCoordinates - previousSegmentCoordinates;
+
+    if(coordinatesDifference == std::pair{+1, 0})
+    {
+        return Direction::left;
+    }
+    else if(coordinatesDifference == std::pair{-1, 0})
+    {
+        return Direction::right;
+    }
+    else if(coordinatesDifference == std::pair{0, +1})
+    {
+        return Direction::up;
+    }
+    else if(coordinatesDifference == std::pair{0, -1})
+    {
+        return Direction::down;
     }
     else
     {
-        removeTail();
+        throw std::runtime_error("Wrong coordinates difference");
     }
 }
 
-void Snake::grow()
+QVector<Coordinates> Snake::getAllSegmentsCoordinatesExceptForHead()
 {
-    /*Growing is actually not removing the tail segment if there is food inside it*/
-    segments_.back()->setIsFoodInside(false);
-}
+    QVector<Coordinates> allSegmentsCoordinatesExceptForHead;
 
-void Snake::removeTail()
-{
-    segments_.removeLast();
+    for(int i = 1; i < segments_.size(); ++i)
+    {
+        allSegmentsCoordinatesExceptForHead.push_back(segments_.at(i)->getCoordinates());
+    }
+
+    return allSegmentsCoordinatesExceptForHead;
 }

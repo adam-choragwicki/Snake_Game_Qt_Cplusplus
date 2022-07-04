@@ -8,8 +8,9 @@
 #include <QKeyEvent>
 #include <QGraphicsScene>
 
-namespace Ui {
-class GameWindow;
+namespace Ui
+{
+    class GameWindow;
 }
 
 class GameWindow : public QMainWindow
@@ -17,21 +18,19 @@ class GameWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit GameWindow(GameEngine& gameEngine, QWidget* parent = nullptr);
+    explicit GameWindow(QWidget* parent = nullptr);
     ~GameWindow() override;
 
-    void initializeGameplayAreaScene();
-
 private:
-    Ui::GameWindow* ui_;
-    GameEngine& gameEngine_;
-    QGraphicsScene scene_;
-
+    void initializeGameplayAreaScene();
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
 
-    void dialogRestartGameSlot();
+    Ui::GameWindow* ui_;
+    QGraphicsScene scene_;
+    std::unique_ptr<GameEngine> gameEngine_;
 
 private slots:
+    void dialogRestartGameSlot();
     void speedSliderValueChangedSlot();
 };

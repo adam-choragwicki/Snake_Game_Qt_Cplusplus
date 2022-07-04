@@ -5,11 +5,8 @@
 int main(int argc, char* argv[])
 {
     QApplication application(argc, argv);
-
-    GameEngine gameEngine;
-
-    GameWindow gameWindow(gameEngine);
+    GameWindow gameWindow;
     gameWindow.show();
 
-    return application.exec();
+    return QApplication::exec();
 }
