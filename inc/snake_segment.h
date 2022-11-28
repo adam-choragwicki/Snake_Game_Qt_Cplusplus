@@ -3,15 +3,11 @@
 #include "common.h"
 #include "coordinates.h"
 
-#include <QGraphicsItem>
-#include <QPen>
-#include <QPainter>
-
-class SnakeSegment : public QGraphicsItem
+class SnakeSegment
 {
 public:
     explicit SnakeSegment(const Coordinates& coordinates);
-    ~SnakeSegment() override;
+    ~SnakeSegment();
 
     Direction move(Direction direction);
 
@@ -21,9 +17,6 @@ public:
     [[nodiscard]] const Coordinates& getCoordinates() const {return coordinates_;}
 
 protected:
-    [[nodiscard]] QRectF boundingRect() const override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-
     Coordinates coordinates_;
     bool isFoodInside_ {};
 };
@@ -34,8 +27,5 @@ public:
     explicit HeadSegment(const Coordinates& coordinates, Direction& direction);
 
 private:
-    [[nodiscard]] QRectF boundingRect() const override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-
     Direction& direction_;
 };

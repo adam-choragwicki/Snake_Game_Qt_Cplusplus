@@ -17,5 +17,5 @@ Run\
 **executable_linux/Snake.sh**
 
 # Remarks
-- Hold space key for temporary snake speed boost.
+- Hold SPACE key for temporary snake speed boost.
 - Adjust speed slider or press num +/- to increase/decrease game speed.

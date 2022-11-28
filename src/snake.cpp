@@ -1,32 +1,22 @@
 #include "snake.h"
-#include "drawer.h"
-#include "log_manager.h"
 
 Snake::Snake()
 {
-    segments_.emplaceBack(new HeadSegment{startingCoordinates_.at(0), direction_});
+    segments_.emplace_back(std::make_unique<HeadSegment>(startingCoordinates_.at(0), direction_));
 
     for(int i = 1; i < startingCoordinates_.size(); ++i)
     {
         addSegment(startingCoordinates_.at(i));
     }
 
-    setDirection(Direction::left);
+    setDirection(Direction::LEFT);
     setNextDirection(direction_);
-}
-
-Snake::~Snake()
-{
-    for(const SnakeSegment* segment : segments_)
-    {
-        delete segment;
-    }
 }
 
 void Snake::moveForward()
 {
     Coordinates previousSegmentCoordinates = getHeadCoordinates();
-    segments_.head()->move(direction_);
+    segments_.front()->move(direction_);
 
     const Coordinates& tailCoordinates = getTailCoordinates();
 
@@ -35,7 +25,7 @@ void Snake::moveForward()
 
     for(auto iter = segments_.begin() + 1; iter != segments_.end(); ++iter)
     {
-        SnakeSegment* snakeSegment = *iter;
+        auto& snakeSegment = *iter;
         Coordinates currentSegmentCoordinates = snakeSegment->getCoordinates();
         Direction moveDirection = calculateSegmentDirection(previousSegmentCoordinates, currentSegmentCoordinates);
 
@@ -49,6 +39,8 @@ void Snake::moveForward()
     }
 
     shiftFoodInsideSnake(tailDirection);
+
+    emit positionChangedEvent();
 }
 
 void Snake::shiftFoodInsideSnake(Direction& tailSegmentDirection)
@@ -59,7 +51,7 @@ void Snake::shiftFoodInsideSnake(Direction& tailSegmentDirection)
     /*Iterate from back to front, shifting food inside snake*/
     for(int i = segments_.size() - 1; i >= 0; --i)
     {
-        SnakeSegment* segment = segments_.at(i);
+        auto& segment = segments_.at(i);
         const Coordinates& segmentCoordinates = segment->getCoordinates();
 
         if(segmentCoordinates == headCoordinates)
@@ -99,29 +91,72 @@ void Snake::shiftFoodInsideSnake(Direction& tailSegmentDirection)
 
 void Snake::processFoodEaten()
 {
-    segments_.head()->setIsFoodInside(true);
+    segments_.front()->setIsFoodInside(true);
 }
 
 void Snake::grow(Direction tailDirection)
 {
     const Coordinates& tailCoordinates = segments_.back()->getCoordinates();
 
-    if(tailDirection == Direction::left)
+    if(tailDirection == Direction::LEFT)
     {
         addSegment(tailCoordinates + std::pair{+1, 0});
     }
-    else if(tailDirection == Direction::right)
+    else if(tailDirection == Direction::RIGHT)
     {
         addSegment(tailCoordinates + std::pair{-1, 0});
     }
-    else if(tailDirection == Direction::up)
+    else if(tailDirection == Direction::UP)
     {
         addSegment(tailCoordinates + std::pair{0, -1});
     }
-    else if(tailDirection == Direction::down)
+    else if(tailDirection == Direction::DOWN)
     {
         addSegment(tailCoordinates + std::pair{0, +1});
     }
+}
+
+void Snake::addSegment(const Coordinates& coordinates)
+{
+    segments_.emplace_back(std::make_unique<SnakeSegment>(coordinates));
+}
+
+Direction Snake::calculateSegmentDirection(const Coordinates& previousSegmentCoordinates, const Coordinates& currentSegmentCoordinates)
+{
+    const std::pair<int, int> coordinatesDifference = currentSegmentCoordinates - previousSegmentCoordinates;
+
+    if(coordinatesDifference == std::pair{+1, 0})
+    {
+        return Direction::LEFT;
+    }
+    else if(coordinatesDifference == std::pair{-1, 0})
+    {
+        return Direction::RIGHT;
+    }
+    else if(coordinatesDifference == std::pair{0, +1})
+    {
+        return Direction::UP;
+    }
+    else if(coordinatesDifference == std::pair{0, -1})
+    {
+        return Direction::DOWN;
+    }
+    else
+    {
+        throw std::runtime_error("Wrong coordinates difference");
+    }
+}
+
+std::vector<Coordinates> Snake::getAllSegmentsCoordinatesExceptForHead()
+{
+    std::vector<Coordinates> allSegmentsCoordinatesExceptForHead;
+
+    for(int i = 1; i < segments_.size(); ++i)
+    {
+        allSegmentsCoordinatesExceptForHead.push_back(segments_.at(i)->getCoordinates());
+    }
+
+    return allSegmentsCoordinatesExceptForHead;
 }
 
 std::ostream& operator<<(std::ostream& os, const Snake& snake)
@@ -132,48 +167,4 @@ std::ostream& operator<<(std::ostream& os, const Snake& snake)
     }
 
     return os;
-}
-
-void Snake::addSegment(const Coordinates& coordinates)
-{
-    logFile << "Add segment on coordinates=" << coordinates << std::endl;
-    segments_.emplaceBack(new SnakeSegment{coordinates});
-}
-
-Direction Snake::calculateSegmentDirection(const Coordinates& previousSegmentCoordinates, const Coordinates& currentSegmentCoordinates)
-{
-    const std::pair<int, int> coordinatesDifference = currentSegmentCoordinates - previousSegmentCoordinates;
-
-    if(coordinatesDifference == std::pair{+1, 0})
-    {
-        return Direction::left;
-    }
-    else if(coordinatesDifference == std::pair{-1, 0})
-    {
-        return Direction::right;
-    }
-    else if(coordinatesDifference == std::pair{0, +1})
-    {
-        return Direction::up;
-    }
-    else if(coordinatesDifference == std::pair{0, -1})
-    {
-        return Direction::down;
-    }
-    else
-    {
-        throw std::runtime_error("Wrong coordinates difference");
-    }
-}
-
-QVector<Coordinates> Snake::getAllSegmentsCoordinatesExceptForHead()
-{
-    QVector<Coordinates> allSegmentsCoordinatesExceptForHead;
-
-    for(int i = 1; i < segments_.size(); ++i)
-    {
-        allSegmentsCoordinatesExceptForHead.push_back(segments_.at(i)->getCoordinates());
-    }
-
-    return allSegmentsCoordinatesExceptForHead;
 }

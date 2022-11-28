@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QVector>
+#include <iostream>
 
 struct Coordinates
 {

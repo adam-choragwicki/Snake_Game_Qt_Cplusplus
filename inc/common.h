@@ -2,19 +2,20 @@
 
 enum class Direction
 {
-    left = 1,
-    right = 2,
-    up = 3,
-    down = 4
+    LEFT = 1, RIGHT = 2, UP = 3, DOWN = 4
 };
 
 enum class Key
 {
-    left,
-    right,
-    up,
-    down,
-    plus,
-    minus,
-    space
+    LEFT, RIGHT, UP, DOWN, PLUS, MINUS, SPACE
+};
+
+enum class GameState
+{
+    RUNNING, STOPPED, PAUSED
+};
+
+enum class GameResult
+{
+    WIN, LOSE
 };

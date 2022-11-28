@@ -20,24 +20,27 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS ${UI_FORMS_DIR})
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 set(SOURCE_FILES
-        ${SOURCES_DIR}/main.cpp
+        ${INCLUDES_DIR}/game.h ${SOURCES_DIR}/game.cpp
+        ${INCLUDES_DIR}/model.h ${SOURCES_DIR}/model.cpp
+        ${INCLUDES_DIR}/view/main_window.h ${SOURCES_DIR}/view/main_window.cpp ${UI_FORMS_DIR}/main_window.ui
+        ${INCLUDES_DIR}/view/game_arena.h ${SOURCES_DIR}/view/game_arena.cpp
+        ${INCLUDES_DIR}/view/end_game_dialog.h ${SOURCES_DIR}/view/end_game_dialog.cpp
+        ${INCLUDES_DIR}/view/gui_config.h
+        ${INCLUDES_DIR}/controller.h ${SOURCES_DIR}/controller.cpp
         ${INCLUDES_DIR}/common.h
-        ${INCLUDES_DIR}/game_window.h ${SOURCES_DIR}/game_window.cpp ${UI_FORMS_DIR}/game_window.ui
-        ${INCLUDES_DIR}/game_engine.h ${SOURCES_DIR}/game_engine.cpp
         ${INCLUDES_DIR}/food.h ${SOURCES_DIR}/food.cpp
         ${INCLUDES_DIR}/snake.h ${SOURCES_DIR}/snake.cpp
-        ${INCLUDES_DIR}/drawer.h ${SOURCES_DIR}/drawer.cpp
-        ${INCLUDES_DIR}/log_manager.h ${SOURCES_DIR}/log_manager.cpp
-        ${INCLUDES_DIR}/game_speed_manager.h ${SOURCES_DIR}/game_speed_manager.cpp
+        ${INCLUDES_DIR}/speed_manager.h ${SOURCES_DIR}/speed_manager.cpp
         ${INCLUDES_DIR}/coordinates.h ${SOURCES_DIR}/coordinates.cpp
         ${INCLUDES_DIR}/snake_segment.h ${SOURCES_DIR}/snake_segment.cpp
-        ${INCLUDES_DIR}/config.h)
+        ${INCLUDES_DIR}/config.h
+        ${INCLUDES_DIR}/log_manager.h)
 
-add_library(libSnake ${SOURCE_FILES})
+add_library(libSnake ${SOURCE_FILES} inc/collision_manager.cpp inc/collision_manager.h)
 target_include_directories(libSnake PUBLIC ${INCLUDES_DIR})
 target_link_libraries(libSnake Qt${QT_VERSION_MAJOR}::Widgets)
 
-add_executable(Snake WIN32 ${SOURCES_DIR}/main.cpp)
+add_executable(Snake WIN32 ${SOURCES_DIR}/main.cpp ${SOURCE_FILES})
 target_link_libraries(Snake PRIVATE libSnake)
 
 if (WIN32)

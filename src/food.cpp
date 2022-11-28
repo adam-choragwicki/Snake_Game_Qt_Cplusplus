@@ -1,31 +1,17 @@
 #include "food.h"
-#include "drawer.h"
 #include "config.h"
 
 #include <QRandomGenerator>
 
 Food::Food() : coordinates_(generateCoordinates())
 {
-    setPen(Qt::NoPen);
-    setBrush(GameParameters::foodColor);
 
-    setRect(coordinates_.x_ * GameParameters::snakeSegmentSize + GameParameters::foodInsideSnakeOffset,
-            coordinates_.y_ * GameParameters::snakeSegmentSize + GameParameters::foodInsideSnakeOffset,
-            GameParameters::foodSize,
-            GameParameters::foodSize);
-
-    Drawer::drawItem(this);
-}
-
-Food::~Food()
-{
-    Drawer::eraseItem(this);
 }
 
 Coordinates Food::generateCoordinates()
 {
-    int x = QRandomGenerator::global()->bounded(GameParameters::Arena::minimumRowColumn, GameParameters::Arena::maximumColumn);
-    int y = QRandomGenerator::global()->bounded(GameParameters::Arena::minimumRowColumn, GameParameters::Arena::maximumRow);
+    const int x = QRandomGenerator::global()->bounded(Config::Arena::MIN_ROW_COLUMN, Config::Arena::MAX_COLUMN);
+    const int y = QRandomGenerator::global()->bounded(Config::Arena::MIN_ROW_COLUMN, Config::Arena::MAX_ROW);
 
     return Coordinates{x, y};
 }

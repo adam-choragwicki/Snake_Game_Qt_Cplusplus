@@ -2,18 +2,16 @@
 
 #include "coordinates.h"
 
-#include <QGraphicsEllipseItem>
-
-class Food : public QGraphicsEllipseItem
+class Food
 {
 public:
     Food();
-    ~Food() override;
 
-    [[nodiscard]] const Coordinates& getPosition() const {return coordinates_;}
+    [[nodiscard]] const Coordinates& getCoordinates() const
+    { return coordinates_; }
 
 private:
-    const Coordinates coordinates_;
-
     Coordinates generateCoordinates();
+
+    const Coordinates coordinates_;
 };
