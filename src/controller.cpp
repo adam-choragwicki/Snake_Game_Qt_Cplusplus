@@ -1,138 +1,139 @@
 #include "controller.h"
-#include "collision_manager.h"
+#include "collision_detector.h"
+#include <QCoreApplication>
 
-Controller::Controller(Model* model, MainWindow* view)
+Controller::Controller(Model& model, MainWindow& view) : model_(model), view_(view)
 {
-    model_ = model;
-    view_ = view;
+    connect(&model_.getGameTickTimer(), &QTimer::timeout, this, &Controller::gameTickHandler);
+    connect(&view_, &MainWindow::keyPressedEvent, this, &Controller::processKeyPressedEvent);
+    connect(&view_, &MainWindow::keyReleasedEvent, this, &Controller::processKeyReleasedEvent);
+    connect(view_.getSpeedSlider(), &QSlider::valueChanged, this, &Controller::processSliderValueChanged);
+    connect(&view_, &MainWindow::newGameRequest, this, &Controller::startGame);
+    connect(&view_, &MainWindow::applicationTerminationRequest, this, &Controller::processApplicationTerminationRequest);
+
+    view_.getSpeedSlider()->setValue(Config::Speed::DEFAULT_SPEED_LEVEL);
 }
 
 void Controller::startGame()
 {
-    speedManager_.setSpeedLevel(speedManager_.getSpeedLevel());
-    speedManager_.start();
-    model_->setGameState(GameState::RUNNING);
+    model_.reset();
+    view_.getSpeedSlider()->setValue(model_.getGameSpeedManager().getSpeedLevelInteger());
+    model_.getGameStateManager().startGame();
 }
 
 void Controller::endGame()
 {
-    model_->setGameState(GameState::STOPPED);
-    speedManager_.stop();
-    speedManager_.deactivateSpeedBoost();
-
-    emit gameEndEvent(GameResult::LOSE);
+    model_.getGameStateManager().endGame();
+    view_.showEndGameDialog();
 }
 
-void Controller::processKeyPressedEvent(Key key)
+void Controller::processKeyPressedEvent(QKeyEvent* keyEvent)
 {
-    switch(key)
+    switch(keyEvent->key())
     {
-        case Key::LEFT:
-            model_->getSnake()->setNextDirection(Direction::LEFT);
+        case Qt::Key_Left:
+        case Qt::Key_A:
+            model_.getSnake().setNextHeadDirection(Direction::LEFT);
             break;
 
-        case Key::RIGHT:
-            model_->getSnake()->setNextDirection(Direction::RIGHT);
+        case Qt::Key_Right:
+        case Qt::Key_D:
+            model_.getSnake().setNextHeadDirection(Direction::RIGHT);
             break;
 
-        case Key::UP:
-            model_->getSnake()->setNextDirection(Direction::UP);
+        case Qt::Key_Up:
+        case Qt::Key_W:
+            model_.getSnake().setNextHeadDirection(Direction::UP);
             break;
 
-        case Key::DOWN:
-            model_->getSnake()->setNextDirection(Direction::DOWN);
+        case Qt::Key_Down:
+        case Qt::Key_S:
+            model_.getSnake().setNextHeadDirection(Direction::DOWN);
             break;
 
-        case Key::PLUS:
+        case Qt::Key_Plus:
             incrementGameSpeed();
             break;
 
-        case Key::MINUS:
+        case Qt::Key_Minus:
             decrementGameSpeed();
             break;
 
-        case Key::SPACE:
-            speedManager_.activateSpeedBoost();
+        case Config::Key::BOOST_KEY:
+            model_.getGameSpeedManager().activateSpeedBoost();
+            break;
+
+        case Qt::Key_P:
+            model_.getGameStateManager().togglePause();
             break;
     }
 }
 
-void Controller::processSpeedBoostKeyReleasedEvent()
+void Controller::processKeyReleasedEvent(QKeyEvent* keyEvent)
 {
-    speedManager_.deactivateSpeedBoost();
-}
-
-void Controller::subscribeToKeyEvents()
-{
-    connect(view_, &MainWindow::keyPressedEvent, this, &Controller::processKeyPressedEvent);
-    connect(view_, &MainWindow::speedBoostKeyReleasedEvent, this, &Controller::processSpeedBoostKeyReleasedEvent);
-}
-
-void Controller::subscribeToSpeedSliderValueChangeEvent()
-{
-    connect(view_->getSpeedSlider(), &QSlider::valueChanged, this, &Controller::processSliderValueChanged);
-}
-
-void Controller::subscribeViewToGameEndEvent()
-{
-    connect(this, &Controller::gameEndEvent, view_, &MainWindow::processGameEndEvent);
-}
-
-void Controller::subscribeToGameTickTimer()
-{
-    connect(&speedManager_.getGameTickTimer(), &QTimer::timeout, this, &Controller::gameTickHandler);
-}
-
-void Controller::subscribeViewToSnakePositionChangedEvent()
-{
-    connect(model_->getSnake(), &Snake::positionChangedEvent, view_->getGameArena(), &GameArena::updateArena);
+    if(keyEvent->key() == Config::Key::BOOST_KEY)
+    {
+        model_.getGameSpeedManager().deactivateSpeedBoost();
+    }
 }
 
 void Controller::processSliderValueChanged(int sliderValue)
 {
-    speedManager_.setSpeedLevel(sliderValue);
+    model_.getGameSpeedManager().setSpeedLevel(sliderValue);
+}
+
+void Controller::processApplicationTerminationRequest()
+{
+    QCoreApplication::exit(0);
 }
 
 void Controller::incrementGameSpeed()
 {
-    speedManager_.incrementSpeed();
-    view_->getSpeedSlider()->setValue(speedManager_.getSpeedLevel());
+    model_.getGameSpeedManager().incrementSpeed();
+    view_.getSpeedSlider()->setValue(model_.getGameSpeedManager().getSpeedLevelInteger());
 }
 
 void Controller::decrementGameSpeed()
 {
-    speedManager_.decrementSpeed();
-    view_->getSpeedSlider()->setValue(speedManager_.getSpeedLevel());
+    model_.getGameSpeedManager().decrementSpeed();
+    view_.getSpeedSlider()->setValue(model_.getGameSpeedManager().getSpeedLevelInteger());
 }
 
 void Controller::gameTickHandler()
 {
-    Snake* snake = model_->getSnake();
+    Snake& snake = model_.getSnake();
 
-    if(model_->getGameState() == GameState::RUNNING)
+    if(model_.getGameStateManager().isRunning())
     {
-        if(CollisionManager::checkSnakeCollisionWithWall(snake))
+        if(CollisionDetector::checkSnakeCollisionWithWall(snake))
         {
-            LOG(INFO) << "Hit wall, head at: " << snake->getHeadCoordinates();
+            LOG(INFO) << "Hit wall, head at: " << snake.getHeadCoordinates();
             endGame();
             return;
         }
 
-        if(CollisionManager::checkSnakeCollisionWithItself(snake))
+        if(CollisionDetector::checkSnakeCollisionWithItself(snake))
         {
-            LOG(INFO) << "Hit itself, head at: " << snake->getHeadCoordinates();
+            LOG(INFO) << "Hit itself, head at: " << snake.getHeadCoordinates();
             endGame();
             return;
         }
 
-        if(CollisionManager::checkSnakeCollisionWithFoodSquare(snake, model_->getFood()))
+        if(model_.getFoodManager().foodExists())
         {
-            LOG(INFO) << "Hit food, head at: " << snake->getHeadCoordinates();
-            snake->processFoodEaten();
-            model_->generateFood();
+            if(CollisionDetector::checkSnakeCollisionWithFood(snake, model_.getFoodManager().getFood()))
+            {
+                LOG(INFO) << "Hit food, head at: " << snake.getHeadCoordinates();
+                snake.eatFood();
+                model_.getFoodManager().removeFood();
+            }
+        }
+        else
+        {
+            model_.getFoodManager().createFood();
         }
 
-        snake->moveForward();
-        snake->setDirection(snake->getNextDirection());
+        snake.moveForward();
+        view_.update();
     }
 }

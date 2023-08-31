@@ -1,15 +1,13 @@
-cmake_minimum_required(VERSION 3.10)
-
-project(SnakeTest LANGUAGES CXX)
-
 set(TEST_SOURCES
-    src/main.cpp
-    src/common_test_fixture.cpp
-    src/snake_test.cpp)
+        src/main.cpp
+        src/snake_creation_test.cpp
+        src/snake_movement_test.cpp
+        src/snake_growth_test.cpp
+        src/snake_collision_with_itself_test.cpp
+        src/snake_collision_with_wall_test.cpp)
 
-add_subdirectory(lib)
-include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+add_subdirectory(googletest)
 
-add_executable(SnakeTest_run ${TEST_SOURCES})
-target_include_directories(SnakeTest_run PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/inc)
-target_link_libraries(SnakeTest_run gtest gtest_main libSnake)
+add_executable(${PROJECT_NAME}Test_run ${TEST_SOURCES})
+target_include_directories(${PROJECT_NAME}Test_run PRIVATE src)
+target_link_libraries(${PROJECT_NAME}Test_run PRIVATE gtest lib${PROJECT_NAME}Backend)

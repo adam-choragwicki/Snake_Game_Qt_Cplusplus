@@ -1,4 +1,5 @@
 #include "game.h"
+#include <QApplication>
 
 int main(int argc, char* argv[])
 {
@@ -8,7 +9,4 @@ int main(int argc, char* argv[])
     return QApplication::exec();
 }
 
-//TODO add end game win
-//TODO food should be created only on empty fields
 //TODO add points
-//TODO grow mechanism has some bug on tail
