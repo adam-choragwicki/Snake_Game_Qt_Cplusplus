@@ -1,47 +1,138 @@
 #include "controller.h"
-#include "spdlog/spdlog.h"
-#include <QCoreApplication>
+#include <QQmlContext>
 
-Controller::Controller(Model& model, MainWindow& view) : model_(model), view_(view)
+Controller::Controller(const GameConfig& gameConfig, Model& model, QQmlApplicationEngine& view) : gameConfig_(gameConfig), model_(model), view_(view), gameStateManager_(this)
 {
-    inputHandler_ = std::make_unique<InputHandler>(model_);
-    gameLoop_ = std::make_unique<GameLoop>(model_);
-    gameManager_ = std::make_unique<GameManager>(model_);
+    gameLoop_ = std::make_unique<GameLoop>(model_, gameConfig_.SNAKE_MOVEMENT_INTERVAL_MS);
 
-    gameManager_->setGameLoop(gameLoop_.get());
+    // Initialize these early so Q_PROPERTY getters work when QML loads
+    gameCoordinator_ = std::make_unique<GameCoordinator>(model_, *gameLoop_);
+    inputHandler_ = std::make_unique<InputHandler>(this, &windowManager_);
 
-    connect(gameLoop_.get(), &GameLoop::endGame, gameManager_.get(), &GameManager::endGame);
-    connect(gameLoop_.get(), &GameLoop::endGame, &view_, &MainWindow::showEndGameDialog);
-
-    connect(&view_, &MainWindow::applicationTerminationRequest, this, &Controller::processApplicationTerminationRequest);
-
-    subscribeToFrontendEvents();
-    initializeFrontendEvents();
-
-    gameManager_->prepareGameToStart();
-
-    view_.getViewportUpdateTimer()->start();
-
-    gameManager_->startGame();
+    connect(gameLoop_.get(), &GameLoop::endGame, this, &Controller::gameEnded);
 }
 
-void Controller::initializeFrontendEvents()
+void Controller::onQmlEngineFullyInitialized()
 {
-    connect(view_.getViewportUpdateTimer(), &QTimer::timeout, this, &Controller::viewportUpdateHandler);
+    qDebug() << "QML engine fully initialized";
+
+    windowManager_.setWindow(qmlHelper_.getMainWindow());
+    overlayManager_ = std::make_unique<OverlayManager>(qmlHelper_);
+
+    // Now that QML is loaded, provide QmlHelper to GameCoordinator
+    gameCoordinator_->setQmlHelper(&qmlHelper_);
+
+    qInfo() << "Game started. Resolution =" << windowManager_.getInitialRenderResolution().width() << "x" << windowManager_.getInitialRenderResolution().height();
+    setGameState(GameStateType::ReadyToStart);
 }
 
-void Controller::subscribeToFrontendEvents()
+void Controller::startGameLoop()
 {
-    connect(&view_, &MainWindow::keyPressedEvent, inputHandler_.get(), &InputHandler::processKeyPressedEvent);
-    connect(&view_, &MainWindow::newGameRequest, gameManager_.get(), &GameManager::processRestartGameRequest);
+    // qDebug() << "Controller::startGameLoop()";
+    gameCoordinator_->startGameLoop();
 }
 
-void Controller::processApplicationTerminationRequest()
+void Controller::stopGameLoop()
 {
-    QCoreApplication::exit(0);
+    // qDebug() << "Controller::stopGameLoop()";
+    gameCoordinator_->stopGameLoop();
 }
 
-void Controller::viewportUpdateHandler()
+void Controller::showStartingImageOverlay()
 {
-    view_.updateViewport();
+    overlayManager_->showStartingImageOverlay();
+}
+
+void Controller::hideStartingImageOverlay()
+{
+    overlayManager_->hideStartingImageOverlay();
+}
+
+void Controller::showEndGameOverlay()
+{
+    overlayManager_->showEndGameOverlay(model_.getScoreManager().getScoreAsString());
+}
+
+void Controller::hideEndGameOverlay()
+{
+    overlayManager_->hideEndGameOverlay();
+}
+
+void Controller::showEscapeMenuOverlay()
+{
+    overlayManager_->showEscapeMenuOverlay();
+}
+
+void Controller::hideEscapeMenuOverlay()
+{
+    overlayManager_->hideEscapeMenuOverlay();
+}
+
+void Controller::setGameState(const GameStateType newGameState)
+{
+    gameStateManager_.setGameState(newGameState);
+}
+
+void Controller::restorePreviousState()
+{
+    gameStateManager_.restorePreviousGameState();
+}
+
+void Controller::processKeyPress(const int key)
+{
+    // qDebug() << "Key pressed:" << key;
+    inputHandler_->processKeyPress(key);
+}
+
+void Controller::onResumeClicked()
+{
+    qInfo() << "Resume button clicked";
+    gameStateManager_.restorePreviousGameState();
+}
+
+void Controller::onRestartClicked()
+{
+    qInfo() << "Restart button clicked";
+    gameCoordinator_->restartGame();
+    gameStateManager_.setGameState(GameStateType::ReadyToStart);
+}
+
+void Controller::onQuitClicked()
+{
+    qInfo() << "Quit button clicked";
+    emit applicationShutdownRequested();
+}
+
+void Controller::onPlayAgainClicked()
+{
+    qInfo() << "Play again button clicked";
+    gameCoordinator_->restartGame();
+    gameStateManager_.setGameState(GameStateType::ReadyToStart);
+}
+
+void Controller::gameEnded()
+{
+    qInfo() << "Game ended";
+    setGameState(GameStateType::GameEnded);
+}
+
+void Controller::processSnakeDirectionKeyPress(const Direction& nextDirection)
+{
+    // qDebug() << "processSnakeDirectionKeyPress:" << static_cast<int>(nextDirection);
+    model_.getSnake().setNextHeadDirection(nextDirection);
+}
+
+void Controller::enableSnakeAnimation()
+{
+    qmlHelper_.getSnakeLayer()->setProperty("snakeAnimationsEnabled", true);
+}
+
+void Controller::disableSnakeAnimation()
+{
+    qmlHelper_.getSnakeLayer()->setProperty("snakeAnimationsEnabled", false);
+}
+
+void Controller::spawnFoodAtCoordinates(const Coordinates& coordinates)
+{
+    model_.getFoodManager().spawnFoodAtCoordinates(coordinates);
 }

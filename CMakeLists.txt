@@ -1,22 +1,13 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(Snake LANGUAGES CXX)
+project(Snake VERSION 2.0.0 LANGUAGES CXX)
 
-set(QT_VERSION_MAJOR 6)
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets REQUIRED)
+find_package(Qt6 6.9.2 COMPONENTS Core Quick REQUIRED)
 
-set(PROJECT_ROOT ${CMAKE_SOURCE_DIR})
-set(BACKEND_DIR ${PROJECT_ROOT}/src/backend)
-set(ASSETS_DIR ${PROJECT_ROOT}/assets)
-
-add_subdirectory(libs/spdlog)
+qt_standard_project_setup(REQUIRES 6.9)
 
 # Enable ccache if available
 find_program(CCACHE_PROGRAM ccache)
@@ -26,4 +17,5 @@ if (CCACHE_PROGRAM)
 endif ()
 
 add_subdirectory(src)
+add_subdirectory(qml)
 add_subdirectory(tests)

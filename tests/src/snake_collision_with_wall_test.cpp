@@ -1,17 +1,17 @@
 #include "gtest/gtest.h"
 #include "collision_manager.h"
-#include "model/arena.h"
-#include "model/snake.h"
+#include "arena.h"
+#include "snake.h"
 
-class SnakeCollisionWithWallTest : public ::testing::Test
+class SnakeCollisionWithWallTest : public testing::Test
 {
 protected:
     SnakeCollisionWithWallTest()
     {
         struct ArenaConfig
         {
-            const int PLAYABLE_HORIZONTAL_SQUARES_COUNT = 5;
-            const int PLAYABLE_VERTICAL_SQUARES_COUNT = 5;
+            const int ROW_COUNT = 5;
+            const int COLUMN_COUNT = 5;
         } arenaConfig;
 
         struct SnakeConfig
@@ -21,11 +21,11 @@ protected:
             const int STARTING_TOTAL_SEGMENT_COUNT = 3;
         } snakeConfig;
 
-        arena_ = std::make_unique<Arena>(arenaConfig.PLAYABLE_HORIZONTAL_SQUARES_COUNT, arenaConfig.PLAYABLE_VERTICAL_SQUARES_COUNT);
-        snake_ = std::make_unique<Snake>(snakeConfig.STARTING_HEAD_COORDINATES, snakeConfig.STARTING_DIRECTION, snakeConfig.STARTING_TOTAL_SEGMENT_COUNT, nullptr);
+        arena_ = std::make_unique<Arena>(arenaConfig.ROW_COUNT, arenaConfig.COLUMN_COUNT);
+        snake_ = std::make_unique<Snake>(gameConfig, snakeConfig.STARTING_HEAD_COORDINATES, snakeConfig.STARTING_DIRECTION, snakeConfig.STARTING_TOTAL_SEGMENT_COUNT);
     }
 
-protected:
+    GameConfig gameConfig;
     std::unique_ptr<Arena> arena_;
     std::unique_ptr<Snake> snake_;
 };
@@ -39,6 +39,6 @@ TEST_F(SnakeCollisionWithWallTest, SnakeCollidesWithLeftWall)
     snake_->moveForward();
     /* Now at 1,2 */
 
-    /* Now at 1,2 and moving left so collision */
+    /* Now at 1,2 and moving left which means collision */
     EXPECT_TRUE(CollisionManager::checkSnakeCollisionWithArenaBoundary(*snake_, *arena_));
 }
