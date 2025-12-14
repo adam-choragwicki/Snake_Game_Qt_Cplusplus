@@ -1,6 +1,6 @@
 #include "common_test_fixture.h"
 #include "coordinates.h"
-#include "model/head_segment.h"
+#include "head_segment.h"
 
 class SnakeMovementTest : public CommonTestFixture
 {

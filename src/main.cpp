@@ -1,34 +1,34 @@
 #include "game.h"
-#include <QApplication>
-
-#include "spdlog/spdlog.h"
-#include <spdlog/sinks/basic_file_sink.h>
+#include "log_manager.h"
 
 int main(int argc, char* argv[])
 {
-    QApplication application(argc, argv);
-
-    bool enableLogging = true;
-
-    if(enableLogging)
+    try
     {
-        bool logToFile = true;
+#if defined(QT_DEBUG)
+        LogManager::initialize(LogManager::Mode::LogToFileAndConsole, LogManager::Verbosity::Debug);
+#else
+        LogManager::initialize(LogManager::Mode::LogToFileOnly, LogManager::Verbosity::Info);
+#endif
 
-        spdlog::set_level(spdlog::level::debug);
+        QGuiApplication app(argc, argv);
 
-        if(logToFile)
-        {
-            spdlog::default_logger()->sinks().push_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/log.txt", true));
-        }
+        Game game;
 
-        spdlog::flush_on(spdlog::level::debug);
+        return QGuiApplication::exec();
     }
-    else
+    catch (const std::exception& e)
     {
-        spdlog::set_level(spdlog::level::off);
+        qCritical() << "Unhandled exception:" << e.what();
+        return 1;
     }
-
-    Game game;
-
-    return QApplication::exec();
+    catch (...)
+    {
+        qCritical() << "Unhandled unknown exception";
+        return 1;
+    }
 }
+
+// TODO FEATURE add sounds
+// TODO OPTIONAL FEATURE add keyboard support to escape overlay end game overlay
+// TODO OPTIONAL FEATURE make snake rotate fluently

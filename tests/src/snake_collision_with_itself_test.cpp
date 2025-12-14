@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
-#include "model/snake.h"
+#include "snake.h"
 #include "collision_manager.h"
 
-class SnakeCollisionWithItselfTest : public ::testing::Test
+class SnakeCollisionWithItselfTest : public testing::Test
 {
 protected:
     SnakeCollisionWithItselfTest()
@@ -14,10 +14,10 @@ protected:
             const int STARTING_TOTAL_SEGMENT_COUNT = 5;
         } snakeConfig;
 
-        snake_ = std::make_unique<Snake>(snakeConfig.STARTING_HEAD_COORDINATES, snakeConfig.STARTING_DIRECTION, snakeConfig.STARTING_TOTAL_SEGMENT_COUNT, nullptr);
+        snake_ = std::make_unique<Snake>(gameConfig, snakeConfig.STARTING_HEAD_COORDINATES, snakeConfig.STARTING_DIRECTION, snakeConfig.STARTING_TOTAL_SEGMENT_COUNT);
     }
 
-protected:
+    GameConfig gameConfig;
     std::unique_ptr<Snake> snake_;
 };
 

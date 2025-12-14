@@ -1,29 +1,17 @@
 # Snake
-C++ implementation of classic Snake game using Qt 6.2.4 library.
+C++ implementation of the classic Snake game using Qt 6.9.2.
 
-**Windows and Linux executables are provided.**
+Frontend is rendered using QML engine.
+
+**Windows executable is provided.**
 
 ![video.gif](video.gif)
 
 # Tests
-Unit tested using Google Test 1.11.0
-
-# How to run on Linux
-1. Download release zip from:\
-   https://github.com/adam-choragwicki/Snake_Game_Qt_Cplusplus/releases/latest/download/executable_linux.zip
-2. Unzip
-3. Run **executable_linux/Snake.sh**
-
-**OR**
-
-1. Clone repository and run **Snake.sh**
+Unit tested using Google Test 1.17.0
 
 # How to run on Windows
 1. Download release zip from:\
    https://github.com/adam-choragwicki/Snake_Game_Qt_Cplusplus/releases/latest/download/executable_windows.zip
 2. Unzip
-3. Run **executable_linux/Snake.exe**
-
-**OR**
-
-1. Clone repository and run **Snake.bat**
+3. Run **executable_windows/Snake.exe**
