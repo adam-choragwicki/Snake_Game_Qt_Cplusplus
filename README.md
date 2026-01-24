@@ -12,6 +12,6 @@ Unit tested using Google Test 1.17.0
 
 # How to run on Windows
 1. Download release zip from:\
-   https://github.com/adam-choragwicki/Snake_Game_Qt_Cplusplus/releases/latest/download/executable_windows.zip
+   https://github.com/adam-choragwicki/Snake_Game_Qt_Cplusplus_QML/releases/latest/download/executable_windows.zip
 2. Unzip
 3. Run **executable_windows/Snake.exe**
